@@ -18,7 +18,23 @@
     plans = await getPlans();
   });
   async function newPlan() {
-    Navigation.goTo(Routes.newPlan);
+    Navigation.goTo(Routes.newPlan, {
+      item: {
+        name: null,
+        price: null,
+        discount: null,
+        discountType: null,
+        details: [],
+        highlighted: false,
+      },
+      edit: false,
+    });
+  }
+  async function editSetting(item) {
+    Navigation.goTo(Routes.newPlan, {
+      item,
+      edit: true,
+    });
   }
   async function onRemoveClick(id) {
     isLoading = true;
@@ -71,6 +87,9 @@
           <span on:click={onRemoveClick(plan.id)} class="remove"
             ><Fa icon={faTrashAlt} /></span
           >
+          <span on:click={editSetting(plan)} class="edit"
+            ><Fa icon={faEdit} /></span
+          >
           <h2>{plan.name}</h2>
           <div>price: {Utils.Strings.currency(plan.price)}</div>
           <div>Data: {Utils.Strings.dateToDateString(plan.createdAt)}</div>
@@ -117,6 +136,22 @@
     border-radius: 20px;
     width: 26px;
     height: 26px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 6px;
+  }
+  .edit {
+    position: absolute;
+    top: -8px;
+    right: 35px;
+    font-size: 0.9em;
+    color: white;
+    font-family: RobotoBold;
+    border: 1px solid red;
+    background: red;
+    border-radius: 20px;
+    width: 25px;
+    height: 25px;
     vertical-align: middle;
     text-align: center;
     padding: 6px;

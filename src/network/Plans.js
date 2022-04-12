@@ -11,13 +11,25 @@ import {
 export async function getPlans() {
     const response = await Network.instance.get("/admin/plans", get(Auth));
     if(response && response?.success){
-        return response?.data || [];
+        return (response?.data || []).map(plan => {
+            plan.details = (typeof plan.details === 'string' ? JSON.parse(plan.details) : plan.details).map(detail => {
+                return {
+                    key: detail?.key || null,
+                    value: detail?.value || null
+                }
+            });
+            return plan;
+        });
     }
     return [];
 }
 
 export async function newPlan(object) {
     return Network.instance.post("/admin/plan", get(Auth), object);
+}
+
+export async function editPlan(object) {
+    return Network.instance.put("/admin/plan", get(Auth), object);
 }
 
 export async function activatePlan(object) {

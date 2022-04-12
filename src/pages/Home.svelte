@@ -10,10 +10,7 @@
   <section>
     <article>
       {#await countRestaurants()}
-        <Views.LocalLoading
-          topPadding={$StatusBar.height}
-          bottomPadding={$StatusBar.bottomPadding}
-        />
+        <Views.LocalLoading />
       {:then restaurantsCount}
         <span class="count">{restaurantsCount}</span>
         <span class="name">Restaurantes</span>
@@ -21,10 +18,7 @@
     </article>
     <article>
       {#await countResellers()}
-        <Views.LocalLoading
-          topPadding={$StatusBar.height}
-          bottomPadding={$StatusBar.bottomPadding}
-        />
+        <Views.LocalLoading />
       {:then resellersCount}
         <span class="count">{resellersCount}</span>
         <span class="name">Vendedores</span>
@@ -32,10 +26,7 @@
     </article>
     <article>
       {#await countProducts()}
-        <Views.LocalLoading
-          topPadding={$StatusBar.height}
-          bottomPadding={$StatusBar.bottomPadding}
-        />
+        <Views.LocalLoading />
       {:then productsCount}
         <span class="count">{productsCount}</span>
         <span class="name">produtos</span>
@@ -43,10 +34,7 @@
     </article>
     <article>
       {#await countOrders()}
-        <Views.LocalLoading
-          topPadding={$StatusBar.height}
-          bottomPadding={$StatusBar.bottomPadding}
-        />
+        <Views.LocalLoading />
       {:then ordersCount}
         <span class="count">{ordersCount}</span>
         <span class="name">pedidos</span>
@@ -54,10 +42,7 @@
     </article>
     <article>
       {#await countUsers()}
-        <Views.LocalLoading
-          topPadding={$StatusBar.height}
-          bottomPadding={$StatusBar.bottomPadding}
-        />
+        <Views.LocalLoading />
       {:then usersCount}
         <span class="count">{usersCount}</span>
         <span class="name">Clientes</span>
@@ -65,10 +50,7 @@
     </article>
     <article>
       {#await countCoupons()}
-        <Views.LocalLoading
-          topPadding={$StatusBar.height}
-          bottomPadding={$StatusBar.bottomPadding}
-        />
+        <Views.LocalLoading />
       {:then couponsCount}
         <span class="count">{couponsCount}</span>
         <span class="name">Cupons</span>
