@@ -49,22 +49,7 @@ function createMenu() {
 }
 
 export const Menu = createMenu();
-
-function createMenuHamburger() {
-    const {
-        subscribe,
-        set,
-        update
-    } = writable([]);
-
-    return {
-        subscribe,
-        reset: () => set([]),
-        addItem: (item) => update(items => [...items, item])
-    };
-}
-
-export const MenuHamburger = createMenuHamburger();
+export const MenuHamburger = createMenu();
 
 function createNavigation() {
     const {

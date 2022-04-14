@@ -42,7 +42,7 @@
   } else {
     logedIn = false;
   }
-  $: styleHeight = $_StatusBar.height + 55 + "px";
+  $: styleHeight = `${(Number($_StatusBar.height) + 80)}px`;
 
   const pages = [
     {
@@ -87,7 +87,7 @@
 
 {#if logedIn}
   <main
-    style="padding: 20px; padding-top: {styleHeight}; overflow: hidden;max-width: 100%; bottomPadding:{$_StatusBar.bottomPadding}; "
+    style="margin-top:{styleHeight};padding: 20px; padding-top: 0; padding-bottom: 0; margin-bottom: {$_StatusBar.bottomPadding}; overflow: hidden;max-width: 100%; "
   >
     <div>
       {#if route == Routes.about}
