@@ -29,8 +29,6 @@
   }
 
   async function editPassword() {
-    console.log('passwordObject.newPass', passwordObject.newPass)
-    console.log('passwordObject.reNewPass', passwordObject.reNewPass)
     if (
       passwordObject.oldPass === null ||
       passwordObject.oldPass.length < 6

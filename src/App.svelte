@@ -76,6 +76,7 @@
       icon: faUser,
     },
   ];
+  MenuHamburger.reset();
   pages.forEach((page) => MenuHamburger.addItem(page));
 
   onMount(async () => {

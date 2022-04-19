@@ -50,7 +50,6 @@
   }
   async function onActivateClick(id, event) {
     const checked = event.detail?.checked;
-    console.log(checked);
 
     isLoading = true;
     let response = await activatePlan({
@@ -65,7 +64,6 @@
       plans = plans.map((plan) => {
         if (plan?.id === id) {
           plan.active = checked;
-          console.log(plan);
         }
         return plan;
       });
