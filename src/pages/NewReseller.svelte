@@ -35,28 +35,20 @@
   }
 
   $: if (
-    item.address &&
-    item.address.postalCode &&
-    item.address.postalCode.length === 8 &&
-    item.address.postalCode != currentPostalCode
+    (item?.address?.postalCode?.length || 0) === 8 &&
+    item?.address?.postalCode != currentPostalCode
   ) {
     findAddress();
   }
   function findAddress() {
     isLoading = true;
-    currentPostalCode = item.address.postalCode;
+    currentPostalCode = item?.address?.postalCode;
     GetAddressByCep(item.address.postalCode)
       .then((response) => {
         if (response?.success) {
           const address = response?.data;
           currentPostalCode = address?.postalCode;
-          item.address.id = address?.id;
-          item.address.street = address?.street;
-          item.address.number = address?.number;
-          item.address.complement = address?.complement;
-          item.address.neighborhood = address?.neighborhood;
-          item.address.city = address?.city;
-          item.address.stat = address?.stat;
+          item.address = { ...item?.address, ...address };
         } else {
           toggleErrorAlert(response?.data);
         }
