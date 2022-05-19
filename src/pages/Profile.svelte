@@ -2,7 +2,7 @@
   import { Auth } from "../stores/Auth";
   import { updatePassword } from "../network/Auth";
   import { Title } from "../stores/Navigation";
-  import { Views, Utils } from "@tian/components";
+  import { Views, Utils } from "@ikomida/components";
   import { onMount } from "svelte";
   import { StatusBar } from "../stores/Setup";
 

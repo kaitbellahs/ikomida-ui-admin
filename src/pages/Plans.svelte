@@ -1,7 +1,7 @@
 <script>
   import { Title, Navigation, Routes } from "../stores/Navigation";
   import { getPlans, removePlan, activatePlan } from "../network/Plans";
-  import { Views, Utils } from "@tian/components";
+  import { Views, Utils } from "@ikomida/components";
   import { StatusBar } from "../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
@@ -129,8 +129,8 @@
     font-size: 1.3em;
     color: white;
     font-family: RobotoBold;
-    border: 1px solid red;
-    background: red;
+    border: 1px solid #b52124;
+    background: #b52124;
     border-radius: 20px;
     width: 26px;
     height: 26px;
@@ -145,8 +145,8 @@
     font-size: 0.9em;
     color: white;
     font-family: RobotoBold;
-    border: 1px solid red;
-    background: red;
+    border: 1px solid #b52124;
+    background: #b52124;
     border-radius: 20px;
     width: 25px;
     height: 25px;

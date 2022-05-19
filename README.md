@@ -1,1 +1,1 @@
-# projx-admin
+# ikomida-admin

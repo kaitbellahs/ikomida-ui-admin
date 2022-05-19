@@ -1,7 +1,7 @@
 <script>
     import { Title } from "../stores/Navigation";
     import { countResellers, countRestaurants, countProducts, countOrders, countUsers, countCoupons } from "../network/Quantities";
-    import { Views } from "@tian/components";
+    import { Views } from "@ikomida/components";
     import { StatusBar } from "../stores/Setup";
   
     Title.set("Home");
@@ -85,7 +85,7 @@
     section > article > .count {
       width: 100%;
       font-size: 3em;
-      color: red;
+      color: #b52124;
       text-align: center;
     }
   </style>

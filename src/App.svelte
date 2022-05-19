@@ -22,7 +22,7 @@
     MenuHamburger,
   } from "./stores/Navigation";
   import { StatusBar } from "@capacitor/status-bar";
-  import { Views, Utils } from "@tian/components";
+  import { Views, Utils } from "@ikomida/components";
   import { onMount } from "svelte";
   import {
     faHome,

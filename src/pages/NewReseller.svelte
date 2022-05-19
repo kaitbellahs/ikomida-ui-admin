@@ -3,7 +3,7 @@
   import Fa from "svelte-fa";
   import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
   import { StatusBar } from "../stores/Setup";
-  import { Views } from "@tian/components";
+  import { Views } from "@ikomida/components";
   import { newReseller, GetAddressByCep } from "../network/Resellers";
 
   let item = {

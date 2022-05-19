@@ -1,9 +1,9 @@
 <script>
   import { Auth } from "../stores/Auth";
   import * as AuthNetwork from "../network/Auth";
-  import { Views } from "@tian/components";
+  import { Views } from "@ikomida/components";
   import { faPhone, faUnlock } from "@fortawesome/free-solid-svg-icons";
-  import { Utils } from "@tian/components";
+  import { Utils } from "@ikomida/components";
 
   let isLoading = false;
   let phone = "11953635016";

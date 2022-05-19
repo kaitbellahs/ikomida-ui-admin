@@ -1,7 +1,7 @@
 <script>
   import { Title, Navigation, Routes } from "../stores/Navigation";
   import { getResellers } from "../network/Resellers";
-  import { Views, Utils } from "@tian/components";
+  import { Views, Utils } from "@ikomida/components";
   import { StatusBar } from "../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
