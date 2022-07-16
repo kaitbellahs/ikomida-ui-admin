@@ -68,7 +68,7 @@
   <Views.Switch name="Destacado:" bind:checked={item.highlighted} />
   <Views.Selector
     bind:selected={selectedDiscountType}
-    name="seleciona uma opção"
+    name="selecione uma opção"
     options={Types.DiscountTypes.list}
   />
   {#if selectedDiscountType}
@@ -97,7 +97,7 @@
   {/each}
   <Views.Divider />
   <Views.Button on:click={addDetail}
-    ><Fa icon={faEdit} /><span>Addicionar detalhes</span></Views.Button
+    ><Fa icon={faEdit} /><span>Adicionar detalhes</span></Views.Button
   >
   <Views.Divider />
   <Views.Button on:click={submit} bottomPadding={$StatusBar.bottomPadding}

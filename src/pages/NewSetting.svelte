@@ -90,7 +90,7 @@
   />
   <Views.Selector
     bind:selected={selectedSettingType}
-    name="seleciona uma opção"
+    name="selecione uma opção"
     options={SettingTypes.list}
   />
   {#if selectedSettingType}

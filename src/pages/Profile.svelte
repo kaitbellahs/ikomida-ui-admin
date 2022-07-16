@@ -29,10 +29,7 @@
   }
 
   async function editPassword() {
-    if (
-      passwordObject.oldPass === null ||
-      passwordObject.oldPass.length < 6
-    ) {
+    if (passwordObject.oldPass === null || passwordObject.oldPass.length < 6) {
       toggleErrorAlert("Senha atual invalida!");
       return;
     } else if (
@@ -55,7 +52,7 @@
       return;
     }
     isLoading = false;
-  };
+  }
 
   Title.set("Perfil");
 </script>

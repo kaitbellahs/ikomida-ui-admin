@@ -85,7 +85,7 @@
     section > article > .count {
       width: 100%;
       font-size: 3em;
-      color: #b52124;
+      color: #4c0708;
       text-align: center;
     }
   </style>
