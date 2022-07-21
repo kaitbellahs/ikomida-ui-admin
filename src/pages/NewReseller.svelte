@@ -95,6 +95,10 @@
     bind:value={item.password}
     placeHolder=""
   />
+  <small
+    >A senha deve ter um tamanho entre 8 e 40 caracteres e contendo no mínimo
+    uma letra maiúscula, uma letra minúscula, um número e um símbolo</small
+  >
   <Views.Divider />
   <h2>Endereço</h2>
   <Views.TextEdit
