@@ -1,10 +1,10 @@
 <script>
-  import { Title, Navigation } from "../stores/Navigation";
+  import { Title, Navigation } from "../../stores/Navigation";
   import Fa from "svelte-fa";
   import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
-  import { StatusBar } from "../stores/Setup";
+  import { StatusBar } from "../../stores/Setup";
   import { Views } from "@ikomida/components";
-  import { newReseller, GetAddressByCep } from "../network/Resellers";
+  import { newReseller, GetAddressByCep } from "../../network/Resellers";
 
   let item = {
     name: null,
@@ -13,7 +13,6 @@
     areaCode: 55,
     phone: null,
     email: null,
-    password: null,
     address: {
       postalCode: null,
       address: null,
@@ -35,7 +34,7 @@
   }
 
   $: if (
-    (item?.address?.postalCode?.length || 0) === 8 &&
+    (item?.address?.postalCode?.length ?? 0) === 8 &&
     item?.address?.postalCode != currentPostalCode
   ) {
     findAddress();
@@ -89,12 +88,6 @@
   <Views.TextEdit name="Email:" bind:value={item.email} placeHolder="" />
   <Views.TextEdit name="Telefone:" bind:value={item.phone} placeHolder="" />
   <Views.TextEdit name="CPF:" type="cpf" bind:value={item.cpf} placeHolder="" />
-  <Views.TextEdit
-    name="Senha:"
-    secret={true}
-    bind:value={item.password}
-    placeHolder=""
-  />
   <small
     >A senha deve ter um tamanho entre 8 e 40 caracteres e contendo no mínimo
     uma letra maiúscula, uma letra minúscula, um número e um símbolo</small
@@ -111,7 +104,7 @@
     placeHolder="CEP"
   />
   <Views.TextEdit placeHolder="Endereço" bind:value={item.address.street} />
-  <Views.TextEdit placeHolder="Numero" bind:value={item.address.number} />
+  <Views.TextEdit placeHolder="Número" bind:value={item.address.number} />
   <Views.TextEdit
     placeHolder="Complemento"
     bind:value={item.address.complement}

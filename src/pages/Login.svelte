@@ -47,7 +47,7 @@
     bind:value={initialValue}
     icon={faPhone}
     type="phone"
-    placeHolder="Numero de celular"
+    placeHolder="Número de celular"
     bind:isValid={validPhone}
   />
   <Views.TextEdit

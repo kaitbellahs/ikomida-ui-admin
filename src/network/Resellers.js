@@ -8,17 +8,17 @@ import {
     Auth
 } from '../stores/Auth';
 
-export async function getResellers() {
-    const response = await Network.instance.get("/resellers", get(Auth));
-    if(response && response?.success){
+export async function getResellers(timestamp = 0) {
+    const response = await Network.instance.get(`/resellers/${timestamp}`, get(Auth));
+    if (response && response?.success) {
         return response?.data || [];
     }
     return [];
 }
 
-export async function getRestaurants() {
-    const response = await Network.instance.get("/restaurants", get(Auth));
-    if(response && response?.success){
+export async function getRestaurants(timestamp = 0) {
+    const response = await Network.instance.get(`/restaurants/${timestamp}`, get(Auth));
+    if (response && response?.success) {
         return response?.data || [];
     }
     return [];

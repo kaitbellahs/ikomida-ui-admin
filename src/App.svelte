@@ -2,15 +2,17 @@
   import About from "./pages/About.svelte";
   import Login from "./pages/Login.svelte";
   import Home from "./pages/Home.svelte";
-  import Resellers from "./pages/Resellers.svelte";
+  import Resellers from "./pages/Resellers/Resellers.svelte";
   import Restaurants from "./pages/Restaurants.svelte";
-  import NewReseller from "./pages/NewReseller.svelte";
+  import NewReseller from "./pages/Resellers/NewReseller.svelte";
   import Profile from "./pages/Profile.svelte";
   import Result from "./pages/Result.svelte";
-  import Plans from "./pages/Plans.svelte";
-  import NewPlan from "./pages/NewPlan.svelte";
-  import Settings from "./pages/Settings.svelte";
-  import NewSetting from "./pages/NewSetting.svelte";
+  import Plans from "./pages/Plans/Plans.svelte";
+  import NewPlan from "./pages/Plans/NewPlan.svelte";
+  import Settings from "./pages/Settings/Settings.svelte";
+  import NewSetting from "./pages/Settings/NewSetting.svelte";
+  import Terms from "./pages/Terms/Terms.svelte";
+  import NewTerm from "./pages/Terms/NewTerm.svelte";
   import { Auth } from "./stores/Auth";
   import { StatusBar as _StatusBar } from "./stores/Setup";
   import {
@@ -71,6 +73,11 @@
       icon: faCutlery,
     },
     {
+      name: "Termos",
+      callback: () => Navigation.goTo(Routes.terms),
+      icon: faCutlery,
+    },
+    {
       name: "Perfil",
       callback: () => Navigation.goTo(Routes.profile),
       icon: faUser,
@@ -113,6 +120,10 @@
         <Settings />
       {:else if route == Routes.newSetting}
         <NewSetting />
+      {:else if route == Routes.terms}
+        <Terms />
+      {:else if route == Routes.newTerm}
+        <NewTerm />
       {:else}
         <Home />
       {/if}

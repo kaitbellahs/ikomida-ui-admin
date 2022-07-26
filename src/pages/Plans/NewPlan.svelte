@@ -1,10 +1,10 @@
 <script>
-  import { Title, Navigation, Router } from "../stores/Navigation";
+  import { Title, Navigation, Router } from "../../stores/Navigation";
   import Fa from "svelte-fa";
   import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
-  import { StatusBar } from "../stores/Setup";
+  import { StatusBar } from "../../stores/Setup";
   import { Views, Types } from "@ikomida/components";
-  import { newPlan, editPlan } from "../network/Plans";
+  import { newPlan, editPlan } from "../../network/Plans";
 
   let { item, edit } = $Router.options;
   let isLoading = false;

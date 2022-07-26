@@ -8,8 +8,8 @@ import {
     Auth
 } from '../stores/Auth';
 
-export async function getSettings() {
-    const response = await Network.instance.get("/admin/settings", get(Auth));
+export async function getSettings(timestamp = 0) {
+    const response = await Network.instance.get(`/admin/settings/${timestamp}`, get(Auth));
     if(response && response?.success){
         return response?.data || [];
     }

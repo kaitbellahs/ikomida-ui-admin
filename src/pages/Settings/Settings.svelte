@@ -1,17 +1,62 @@
 <script>
-  import { Title, Navigation, Routes } from "../stores/Navigation";
+  import { Title, Navigation, Routes, Menu } from "../../stores/Navigation";
   import {
     getSettings,
     removeSetting,
     activateSetting,
-  } from "../network/Settings";
+  } from "../../network/Settings";
   import { Views, Utils } from "@ikomida/components";
-  import { StatusBar } from "../stores/Setup";
-  import SettingTypes from "../types/SettingTypes";
+  import { StatusBar } from "../../stores/Setup";
+  import SettingTypes from "../../types/SettingTypes";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+  import {
+    faEdit,
+    faTrashAlt,
+    faSync,
+  } from "@fortawesome/free-solid-svg-icons";
+  import Cache from "../../stores/Cache";
   let settings;
+
+  const CACHE_NAME = "SETTINGS";
+  let hasMore = true;
+  let canGetMore = true;
+  let lastTimestamp = null;
+
+  async function getMore(e, refresh = false) {
+    if (refresh || (canGetMore && hasMore)) {
+      const timestamp = refresh
+        ? 0
+        : settings?.[settings.length - 1]?.timestamp ?? -1;
+      canGetMore = false;
+      settings = Cache.getObject(CACHE_NAME);
+      const newSettings = await getSettings(timestamp);
+      hasMore = newSettings.length > 0;
+      settings = refresh
+        ? newSettings
+        : settings
+        ? [...settings, ...newSettings]
+        : newSettings;
+      settings.sort((item1, item2) => item2.timestamp - item1.timestamp);
+      Cache.setObject(CACHE_NAME, settings);
+      canGetMore = refresh || lastTimestamp !== timestamp;
+      lastTimestamp = timestamp;
+    }
+  }
+
+  onMount(async () => {
+    settings = Cache.getObject(CACHE_NAME);
+    if (!settings) {
+      await getMore(null, true);
+    }
+  });
+
+  async function refresh() {
+    await getMore(null, true);
+  }
+
+  Menu.addItem({ name: "Atualizar", icon: faSync, callback: refresh });
+
   let isLoading = false;
   let errorAlert;
   let showAlert = false;
@@ -19,9 +64,7 @@
     errorAlert = messageObject;
     showAlert = true;
   }
-  onMount(async () => {
-    settings = await getSettings();
-  });
+
   async function newSetting() {
     Navigation.goTo(Routes.newSetting, {
       item: {
@@ -73,6 +116,7 @@
     }
     isLoading = false;
   }
+
   Title.set("Configurções");
 </script>
 
@@ -108,6 +152,14 @@
           />
         </article>
       {/each}
+      <Views.Divider />
+      {#if hasMore && !canGetMore}
+        <Views.LocalLoading />
+      {:else}
+        <Views.Button disabled={!hasMore || !canGetMore} on:click={getMore}
+          >carregar mais</Views.Button
+        >
+      {/if}
     {:else}
       Não há settingos para exibir!
     {/if}

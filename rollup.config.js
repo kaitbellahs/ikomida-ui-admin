@@ -11,6 +11,7 @@ import sveltePreprocess from 'svelte-preprocess';
 import {
 	asMarkupPreprocessor
 } from 'svelte-as-markup-preprocessor';
+import replace from "@rollup/plugin-replace";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -45,6 +46,9 @@ export default {
 		file: 'public/build/bundle.js',
 	},
 	plugins: [
+        replace({
+            isProduction: process.env.ENV === 'prod',
+        }),
 		svelte({
 			preprocess: [
 				asMarkupPreprocessor([

@@ -1,11 +1,11 @@
 <script>
-  import { Title, Navigation, Router } from "../stores/Navigation";
+  import { Title, Navigation, Router } from "../../stores/Navigation";
   import Fa from "svelte-fa";
   import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
-  import { StatusBar } from "../stores/Setup";
+  import { StatusBar } from "../../stores/Setup";
   import { Views } from "@ikomida/components";
-  import { newSetting, editSetting } from "../network/Settings";
-  import SettingTypes from "../types/SettingTypes";
+  import { newSetting, editSetting } from "../../network/Settings";
+  import SettingTypes from "../../types/SettingTypes";
   import { onMount } from "svelte";
 
   let { item, edit } = $Router.options;
@@ -95,7 +95,7 @@
   />
   {#if selectedSettingType}
     {#if selectedSettingType.name === SettingTypes.TEXT || selectedSettingType.name === SettingTypes.LIST}
-      <Views.TextEdit name="Valor:" bind:value={item.value} placeHolder="" />
+      <Views.TextEdit  type="text"name="Valor:" bind:value={item.value} placeHolder="" />
     {:else if selectedSettingType.name === SettingTypes.BOOL}
       <Views.Switch name="Valor:" bind:checked={item.value} />
     {:else if selectedSettingType.name === SettingTypes.NUMBER}

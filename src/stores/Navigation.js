@@ -17,6 +17,8 @@ export const Routes = {
     newPlan: Symbol("/newPlan"),
     settings: Symbol("/settings"),
     newSetting: Symbol("/newSetting"),
+    terms: Symbol("/terms"),
+    newTerm: Symbol("/newTerm"),
     login: Symbol("/login")
 };
 

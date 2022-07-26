@@ -1,12 +1,57 @@
 <script>
-  import { Title, Navigation, Routes } from "../stores/Navigation";
-  import { getPlans, removePlan, activatePlan } from "../network/Plans";
+  import { Title, Navigation, Routes, Menu } from "../../stores/Navigation";
+  import { getPlans, removePlan, activatePlan } from "../../network/Plans";
   import { Views, Utils } from "@ikomida/components";
-  import { StatusBar } from "../stores/Setup";
+  import { StatusBar } from "../../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+  import {
+    faEdit,
+    faTrashAlt,
+    faSync,
+  } from "@fortawesome/free-solid-svg-icons";
+  import Cache from "../../stores/Cache";
   let plans;
+
+  const CACHE_NAME = "PLANS";
+  let hasMore = true;
+  let canGetMore = true;
+  let lastTimestamp = null;
+
+  async function getMore(e, refresh = false) {
+    if (refresh || (canGetMore && hasMore)) {
+      const timestamp = refresh
+        ? 0
+        : plans?.[plans.length - 1]?.timestamp ?? -1;
+      canGetMore = false;
+      plans = Cache.getObject(CACHE_NAME);
+      const newPlans = await getPlans(timestamp);
+      hasMore = newPlans.length > 0;
+      plans = refresh
+        ? newPlans
+        : plans
+        ? [...plans, ...newPlans]
+        : newPlans;
+      plans.sort((item1, item2) => item2.timestamp - item1.timestamp);
+      Cache.setObject(CACHE_NAME, plans);
+      canGetMore = refresh || lastTimestamp !== timestamp;
+      lastTimestamp = timestamp;
+    }
+  }
+
+  onMount(async () => {
+    plans = Cache.getObject(CACHE_NAME);
+    if (!plans) {
+      await getMore(null, true);
+    }
+  });
+
+  async function refresh() {
+    await getMore(null, true);
+  }
+
+  Menu.addItem({ name: "Atualizar", icon: faSync, callback: refresh });
+
   let isLoading = false;
   let errorAlert;
   let showAlert = false;
@@ -14,9 +59,6 @@
     errorAlert = messageObject;
     showAlert = true;
   }
-  onMount(async () => {
-    plans = await getPlans();
-  });
   async function newPlan() {
     Navigation.goTo(Routes.newPlan, {
       item: {
@@ -30,7 +72,7 @@
       edit: false,
     });
   }
-  async function editSetting(item) {
+  async function editPlan(item) {
     Navigation.goTo(Routes.newPlan, {
       item,
       edit: true,
@@ -85,7 +127,7 @@
           <span on:click={onRemoveClick(plan.id)} class="remove"
             ><Fa icon={faTrashAlt} /></span
           >
-          <span on:click={editSetting(plan)} class="edit"
+          <span on:click={editPlan(plan)} class="edit"
             ><Fa icon={faEdit} /></span
           >
           <h2>{plan.name}</h2>
@@ -98,6 +140,14 @@
           />
         </article>
       {/each}
+      <Views.Divider />
+      {#if hasMore && !canGetMore}
+        <Views.LocalLoading />
+      {:else}
+        <Views.Button disabled={!hasMore || !canGetMore} on:click={getMore}
+          >carregar mais</Views.Button
+        >
+      {/if}
     {:else}
       Não há planos para exibir!
     {/if}

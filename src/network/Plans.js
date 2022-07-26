@@ -8,8 +8,8 @@ import {
     Auth
 } from '../stores/Auth';
 
-export async function getPlans() {
-    const response = await Network.instance.get("/admin/plans", get(Auth));
+export async function getPlans(timestamp = 0) {
+    const response = await Network.instance.get(`/admin/plans/${timestamp}`, get(Auth));
     if(response && response?.success){
         return (response?.data || []).map(plan => {
             plan.details = (typeof plan.details === 'string' ? JSON.parse(plan.details) : plan.details).map(detail => {
