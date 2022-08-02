@@ -93,6 +93,9 @@
   });
 </script>
 
+<Views.LoadJS
+  url="https://www.google.com/recaptcha/api.js?render=6LebYzshAAAAAIXhka3WrAjus5tDXtefR1QefVZS"
+/>
 {#if logedIn}
   <main
     style="margin-top:{styleHeight};padding: 20px; padding-top: 0; padding-bottom: 0; margin-bottom: {$_StatusBar.bottomPadding}; overflow: hidden;max-width: 100%; "
@@ -143,4 +146,7 @@
 {/if}
 
 <style>
+  :global(.grecaptcha-badge) {
+    visibility: hidden;
+  }
 </style>

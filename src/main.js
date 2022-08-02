@@ -1,7 +1,7 @@
 import App from './App.svelte';
 import { Network } from '@ikomida/components';
 
-Network.createInstance("http://192.168.1.200", "", "admin");
+Network.createInstance("http://192.168.1.200", "", "admin", "6LebYzshAAAAAIXhka3WrAjus5tDXtefR1QefVZS");
 // Network.createInstance("https://api.ikomida.com", "", "admin");
 
 const app = new App({

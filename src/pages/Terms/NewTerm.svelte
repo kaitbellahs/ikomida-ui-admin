@@ -3,9 +3,8 @@
   import Fa from "svelte-fa";
   import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
   import { StatusBar } from "../../stores/Setup";
-  import { Views } from "@ikomida/components";
+  import { Views, Types } from "@ikomida/components";
   import { newTerm, editTerm } from "../../network/Terms";
-  import TermTypes from "../../types/TermTypes";
   import { onMount } from "svelte";
 
   let { item, edit } = $Router.options;
@@ -20,7 +19,7 @@
   let oldSelectedTermType = null;
 
   onMount(() => {    
-    selectedTermType = TermTypes.list.filter(
+    selectedTermType = Types.TermTypes.list.filter(
       (option) => option.id == item?.type
     )?.[0];
     oldSelectedTermType = selectedTermType;
@@ -74,20 +73,20 @@
   <h2>Dados</h2>
   <Views.TextEdit
     type="name"
-    name="Nome:"
+    placeHolder="Nome"
     bind:value={item.name}
-    placeHolder=""
+    initialValue={item.name}
   />
   <Views.Selector
     bind:selected={selectedTermType}
     name="selecione uma opção"
-    options={TermTypes.list}
+    options={Types.TermTypes.list}
   />
   <Views.TextEdit
     type="text"
-    name="HTML:"
+    placeHolder="HTML"
     bind:value={item.text}
-    placeHolder=""
+    initialValue={item.text}
   />
   <Views.Switch name="Ativo:" bind:checked={item.active} />
   <Views.Divider />

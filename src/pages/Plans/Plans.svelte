@@ -1,7 +1,7 @@
 <script>
   import { Title, Navigation, Routes, Menu } from "../../stores/Navigation";
   import { getPlans, removePlan, activatePlan } from "../../network/Plans";
-  import { Views, Utils } from "@ikomida/components";
+  import { Views, Utils, Types } from "@ikomida/components";
   import { StatusBar } from "../../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
@@ -11,8 +11,8 @@
     faSync,
   } from "@fortawesome/free-solid-svg-icons";
   import Cache from "../../stores/Cache";
-  let plans;
 
+  let plans;
   const CACHE_NAME = "PLANS";
   let hasMore = true;
   let canGetMore = true;
@@ -27,11 +27,7 @@
       plans = Cache.getObject(CACHE_NAME);
       const newPlans = await getPlans(timestamp);
       hasMore = newPlans.length > 0;
-      plans = refresh
-        ? newPlans
-        : plans
-        ? [...plans, ...newPlans]
-        : newPlans;
+      plans = refresh ? newPlans : plans ? [...plans, ...newPlans] : newPlans;
       plans.sort((item1, item2) => item2.timestamp - item1.timestamp);
       Cache.setObject(CACHE_NAME, plans);
       canGetMore = refresh || lastTimestamp !== timestamp;
@@ -68,6 +64,13 @@
         discountType: null,
         details: [],
         highlighted: false,
+        order: null,
+        staff: null,
+        products: null,
+        orders: null,
+        coupons: null,
+        billing: null,
+        support,
       },
       edit: false,
     });
@@ -136,7 +139,7 @@
           <Views.Switch
             name="Ativo:"
             bind:checked={plan.active}
-            on:checked={(event) => onActivateClick(plan.id, event)}
+            on:check={(event) => onActivateClick(plan.id, event)}
           />
         </article>
       {/each}

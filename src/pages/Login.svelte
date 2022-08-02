@@ -6,9 +6,8 @@
   import { Utils } from "@ikomida/components";
 
   let isLoading = false;
-  let phone = "11953635016";
-  let initialValue = "(11) 95363-5016";
-  let password = "123456";
+  let phone ;
+  let password;
   let validPhone = false;
   let validPassword = false;
   let errorAlert;
@@ -43,23 +42,28 @@
 <main>
   <h1>Login!</h1>
   <Views.TextEdit
-    bind:rawValue={phone}
-    bind:value={initialValue}
+    bind:value={phone}
+    initialValue={phone}
     icon={faPhone}
     type="phone"
+    error="insira um número de telefone válido."
     placeHolder="Número de celular"
     bind:isValid={validPhone}
   />
   <Views.TextEdit
     bind:value={password}
+    initialValue={password}
     icon={faUnlock}
     placeHolder="Senha"
     secret={true}
+    error="A senha deve ter um tamanho entre 8 e 40 caracteres e contendo no mínimo
+    uma letra maiúscula, uma letra minúscula, um número e um símbolo."
     bind:isValid={validPassword}
     type="password"
   />
   <div />
   <Views.Button on:click={doLogin} disabled={!canLogin}>Entrar</Views.Button>
+  <Views.GTerms />
   <Views.MessageAlert object={errorAlert} bind:show={showAlert} />
 </main>
 

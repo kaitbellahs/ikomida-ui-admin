@@ -58,14 +58,23 @@
 {/if}
 <div class="plan">
   <h2>Dados do plano</h2>
-  <Views.TextEdit name="Nome:" bind:value={item.name} placeHolder="" />
   <Views.TextEdit
-    name="preço:"
+    placeHolder="Orden de exibição"
+    type="number"
+    bind:value={item.order}
+    initialValue={item.order}
+   
+  />
+  <Views.TextEdit placeHolder="Nome" bind:value={item.name}
+    initialValue={item.name} />
+  <Views.TextEdit
+    placeHolder="preço"
     type="currency"
     bind:value={item.price}
-    placeHolder=""
+    initialValue={item.price}
+   
   />
-  <Views.Switch name="Destacado:" bind:checked={item.highlighted} />
+  <Views.Switch placeHolder="Destacado" bind:checked={item.highlighted} />
   <Views.Selector
     bind:selected={selectedDiscountType}
     name="selecione uma opção"
@@ -75,24 +84,86 @@
     {#if selectedDiscountType.name === Types.DiscountTypes.PERCENT}
       <Views.TextEdit
         type="percent"
-        name="Valor:"
+        placeHolder="Valor"
         bind:value={item.discount}
-        placeHolder=""
+    initialValue={item.discount}
+       
       />
     {:else if selectedDiscountType.name === Types.DiscountTypes.VALUE}
       <Views.TextEdit
-        name="Valor:"
+        placeHolder="Valor"
         bind:value={item.discount}
+    initialValue={item.discount}
         type="currency"
-        placeHolder=""
+       
       />
     {/if}
   {/if}
   <h2>Detalhes do plano</h2>
+  <Views.TextEdit
+    placeHolder="Faturamento"
+    type="currency"
+    bind:value={item.billing}
+    initialValue={item.billing}
+   
+  />
+  <Views.TextEdit
+    placeHolder="Colaboradores"
+    type="number"
+    bind:value={item.staff}
+    initialValue={item.staff}
+   
+  />
+  <Views.TextEdit
+    placeHolder="Produtos"
+    type="number"
+    bind:value={item.products}
+    initialValue={item.products}
+   
+  />
+  <Views.TextEdit
+    placeHolder="Pedidos"
+    type="number"
+    bind:value={item.orders}
+    initialValue={item.orders}
+   
+  />
+  <Views.TextEdit
+    placeHolder="Couons"
+    type="number"
+    bind:value={item.coupons}
+    initialValue={item.coupons}
+   
+  />
+
+  <h3>Meios de suporte</h3>
+  <div class="supports">
+    {#each Types.SupportTypes.list as support}
+      <div class="support">
+        <Views.Checkbox
+          marginTop="0"
+          checked={item?.support?.includes(support?.id)}
+          on:check={(isChecked) => {
+            if(isChecked){
+            const index = item?.support?.indexOf(support?.id);
+            if (index && index > -1) {
+              item?.support?.splice(index, 1);
+            }
+          }else{
+            item?.support?.push(support?.id)
+          }
+          }}
+          label={support.name}
+        />
+      </div>
+    {/each}
+  </div>
   {#each item?.details as detail}
     <div class="twoCells">
-      <Views.TextEdit name="key:" bind:value={detail.key} placeHolder="" />
-      <Views.TextEdit name="value:" bind:value={detail.value} placeHolder="" />
+      <Views.TextEdit placeHolder="key" bind:value={detail.key}
+    initialValue={detail.key} />
+      <Views.TextEdit placeHolder="value" bind:value={detail.value}
+    initialValue={detail.value} />
     </div>
   {/each}
   <Views.Divider />
@@ -110,9 +181,22 @@
   .twoCells {
     display: flex;
   }
-  .twoCells > div {
-    border: 1px solid blue;
+  .plan > .supports {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .plan > .supports > .support {
     flex: 1;
-    margin: 1em;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 5px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 40%;
+    text-shadow: 0.5px 1px #18056b66;
+    box-shadow: 1px 1.5px #00000099;
   }
 </style>

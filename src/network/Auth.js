@@ -13,9 +13,9 @@ export async function doLogin(areaCode, phone, password) {
         areaCode,
         phone,
         password
-    });
+    }, "login");
 }
 
 export async function updatePassword(object) {
-    return Network.instance.post("/password", get(Auth), object);
+    return Network.instance.post("/password", get(Auth), object, "updatePassword");
 }

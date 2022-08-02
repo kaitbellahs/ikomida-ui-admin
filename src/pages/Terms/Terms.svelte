@@ -1,9 +1,8 @@
 <script>
   import { Title, Navigation, Routes, Menu } from "../../stores/Navigation";
   import { getTerms, removeTerm, activateTerm } from "../../network/Terms";
-  import { Views, Utils } from "@ikomida/components";
+  import { Views, Utils, Types } from "@ikomida/components";
   import { StatusBar } from "../../stores/Setup";
-  import TermTypes from "../../types/TermTypes";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
   import {
@@ -131,12 +130,12 @@
             ><Fa icon={faEdit} /></span
           >
           <h2>{term.name}</h2>
-          <div>Tipo: {TermTypes[term.type]}</div>
+          <div>Tipo: {Types.TermTypes[term.type]}</div>
 
           <Views.Switch
             name="Ativo:"
             bind:checked={term.active}
-            on:checked={(event) => onActivateClick(term.id, event)}
+            on:check={(event) => onActivateClick(term.id, event)}
           />
         </article>
       {/each}

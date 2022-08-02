@@ -84,9 +84,10 @@
   <h2>Dados</h2>
   <Views.TextEdit
     type="alphanumeric"
-    name="Nome:"
+    placeHolder="Nome"
     bind:value={item.name}
-    placeHolder=""
+    initialValue={item.name}
+   
   />
   <Views.Selector
     bind:selected={selectedSettingType}
@@ -95,22 +96,25 @@
   />
   {#if selectedSettingType}
     {#if selectedSettingType.name === SettingTypes.TEXT || selectedSettingType.name === SettingTypes.LIST}
-      <Views.TextEdit  type="text"name="Valor:" bind:value={item.value} placeHolder="" />
+      <Views.TextEdit  type="text"placeHolder="Valor" bind:value={item.value}
+    initialValue={item.value} />
     {:else if selectedSettingType.name === SettingTypes.BOOL}
-      <Views.Switch name="Valor:" bind:checked={item.value} />
+      <Views.Switch placeHolder="Valor" bind:checked={item.value} />
     {:else if selectedSettingType.name === SettingTypes.NUMBER}
       <Views.TextEdit
-        name="Valor:"
+        placeHolder="Valor"
         bind:value={item.value}
+    initialValue={item.value}
         type="number"
-        placeHolder=""
+       
       />
     {:else if selectedSettingType.name === SettingTypes.CURRENCY}
       <Views.TextEdit
-        name="Valor:"
+        placeHolder="Valor"
         bind:value={item.value}
+    initialValue={item.value}
         type="currency"
-        placeHolder=""
+       
       />
     {/if}
   {/if}

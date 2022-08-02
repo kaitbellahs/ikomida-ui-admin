@@ -11,7 +11,7 @@ import {
 export async function getResellers(timestamp = 0) {
     const response = await Network.instance.get(`/resellers/${timestamp}`, get(Auth));
     if (response && response?.success) {
-        return response?.data || [];
+        return response?.data ??[];
     }
     return [];
 }
@@ -19,13 +19,13 @@ export async function getResellers(timestamp = 0) {
 export async function getRestaurants(timestamp = 0) {
     const response = await Network.instance.get(`/restaurants/${timestamp}`, get(Auth));
     if (response && response?.success) {
-        return response?.data || [];
+        return response?.data ??[];
     }
     return [];
 }
 
 export async function newReseller(object) {
-    return Network.instance.post("/reseller", get(Auth), object);
+    return Network.instance.post("/reseller", get(Auth), object, "newReseller");
 }
 
 export async function GetAddressByCep(cep) {

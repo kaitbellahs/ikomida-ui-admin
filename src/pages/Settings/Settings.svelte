@@ -148,7 +148,7 @@
           <Views.Switch
             name="Ativo:"
             bind:checked={setting.active}
-            on:checked={(event) => onActivateClick(setting.id, event)}
+            on:check={(event) => onActivateClick(setting.id, event)}
           />
         </article>
       {/each}
