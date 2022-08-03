@@ -79,16 +79,7 @@
           const address = response?.data;
           currentPostalCode = address?.postalCode;
           items.address = { ...items?.address, ...address };
-          itemsInputs.address.street.updateValue(items?.address?.street);
-          itemsInputs.address.number.updateValue(items?.address?.number);
-          itemsInputs.address.complement.updateValue(
-            items?.address?.complement
-          );
-          itemsInputs.address.neighborhood.updateValue(
-            items?.address?.neighborhood
-          );
-          itemsInputs.address.city.updateValue(items?.address?.city);
-          itemsInputs.address.stat.updateValue(items?.address?.stat);
+          Utils.Objects.updateInputs(itemsInputs.address, items.address);
         } else {
           toggleErrorAlert(response?.data);
         }
@@ -191,7 +182,7 @@
     bind:isValid={itemsValidation.address.number}
     min="1"
     max="255"
-    empty={false}
+    empty={!itemsValidation.address.postalCode}
   />
   <Views.TextEdit
     placeHolder="Complemento"

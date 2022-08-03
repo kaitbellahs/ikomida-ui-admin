@@ -1,10 +1,11 @@
 <script>
   import { Title, Navigation, Router } from "../../stores/Navigation";
   import Fa from "svelte-fa";
-  import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
+  import { faEdit } from "@fortawesome/free-solid-svg-icons";
   import { StatusBar } from "../../stores/Setup";
   import { Views, Types } from "@ikomida/components";
   import { newPlan, editPlan } from "../../network/Plans";
+  import { onMount } from "svelte";
 
   let { item, edit } = $Router.options;
   let isLoading = false;
@@ -12,13 +13,14 @@
   let showAlert = false;
   let selectedDiscountType;
   let oldSelectedDiscountType = null;
+  let discountTypeInput = null;
+
   $: if (
     selectedDiscountType &&
     (oldSelectedDiscountType === null ||
       oldSelectedDiscountType?.id !== selectedDiscountType?.id)
   ) {
     item.discountType = selectedDiscountType?.id;
-    item.discount = 0;
     oldSelectedDiscountType = selectedDiscountType;
   }
 
@@ -47,7 +49,12 @@
     }
     isLoading = false;
   };
-  Title.set("Novo plano");
+  onMount(() => {
+    selectedDiscountType = Types.DiscountTypes.list.filter(
+      (type) => type.id === item.discountType
+    )?.[0];
+  });
+  Title.set(edit ? "Editar plano" : "Novo plano");
 </script>
 
 {#if isLoading}
@@ -63,16 +70,17 @@
     type="number"
     bind:value={item.order}
     initialValue={item.order}
-   
   />
-  <Views.TextEdit placeHolder="Nome" bind:value={item.name}
-    initialValue={item.name} />
+  <Views.TextEdit
+    placeHolder="Nome"
+    bind:value={item.name}
+    initialValue={item.name}
+  />
   <Views.TextEdit
     placeHolder="preço"
     type="currency"
     bind:value={item.price}
     initialValue={item.price}
-   
   />
   <Views.Switch placeHolder="Destacado" bind:checked={item.highlighted} />
   <Views.Selector
@@ -86,16 +94,14 @@
         type="percent"
         placeHolder="Valor"
         bind:value={item.discount}
-    initialValue={item.discount}
-       
+        initialValue={item.discount}
       />
     {:else if selectedDiscountType.name === Types.DiscountTypes.VALUE}
       <Views.TextEdit
         placeHolder="Valor"
         bind:value={item.discount}
-    initialValue={item.discount}
+        initialValue={item.discount}
         type="currency"
-       
       />
     {/if}
   {/if}
@@ -105,35 +111,30 @@
     type="currency"
     bind:value={item.billing}
     initialValue={item.billing}
-   
   />
   <Views.TextEdit
     placeHolder="Colaboradores"
     type="number"
     bind:value={item.staff}
     initialValue={item.staff}
-   
   />
   <Views.TextEdit
     placeHolder="Produtos"
     type="number"
     bind:value={item.products}
     initialValue={item.products}
-   
   />
   <Views.TextEdit
     placeHolder="Pedidos"
     type="number"
     bind:value={item.orders}
     initialValue={item.orders}
-   
   />
   <Views.TextEdit
     placeHolder="Couons"
     type="number"
     bind:value={item.coupons}
     initialValue={item.coupons}
-   
   />
 
   <h3>Meios de suporte</h3>
@@ -143,15 +144,14 @@
         <Views.Checkbox
           marginTop="0"
           checked={item?.support?.includes(support?.id)}
-          on:check={(isChecked) => {
-            if(isChecked){
+          on:check={(event) => {
             const index = item?.support?.indexOf(support?.id);
-            if (index && index > -1) {
+            if ((index ?? -1) > -1) {
               item?.support?.splice(index, 1);
             }
-          }else{
-            item?.support?.push(support?.id)
-          }
+            if (!event?.detail?.checked) {
+              item?.support?.push(support?.id);
+            }
           }}
           label={support.name}
         />
@@ -160,10 +160,16 @@
   </div>
   {#each item?.details as detail}
     <div class="twoCells">
-      <Views.TextEdit placeHolder="key" bind:value={detail.key}
-    initialValue={detail.key} />
-      <Views.TextEdit placeHolder="value" bind:value={detail.value}
-    initialValue={detail.value} />
+      <Views.TextEdit
+        placeHolder="key"
+        bind:value={detail.key}
+        initialValue={detail.key}
+      />
+      <Views.TextEdit
+        placeHolder="value"
+        bind:value={detail.value}
+        initialValue={detail.value}
+      />
     </div>
   {/each}
   <Views.Divider />

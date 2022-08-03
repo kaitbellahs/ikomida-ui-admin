@@ -15,6 +15,10 @@
     newPass: null,
     reNewPass: null,
   };
+  let passwordValidationObject = {
+    newPass: false,
+    reNewPass: false,
+  };
   function toggleErrorAlert(messageObject) {
     errorAlert = messageObject;
     showAlert = true;
@@ -29,17 +33,11 @@
   }
 
   async function editPassword() {
-    if (passwordObject.oldPass === null || passwordObject.oldPass.length < 6) {
-      toggleErrorAlert("Senha atual invalida!");
+    if (!passwordValidationObject.newPass) {
+      toggleErrorAlert("A nova senha não está correta!");
       return;
-    } else if (
-      passwordObject.newPass === null ||
-      passwordObject.newPass.length < 6
-    ) {
-      toggleErrorAlert("A nova senha invalida!");
-      return;
-    } else if (passwordObject.newPass !== passwordObject.reNewPass) {
-      toggleErrorAlert("Senha nova e verifição não confirem");
+    } else if (!passwordValidationObject.reNewPass) {
+      toggleErrorAlert("A confirmação da senha não está correta");
       return;
     }
     isLoading = true;
@@ -79,30 +77,27 @@
       <Views.TextValue text="mail:" value={userInfo?.email} fontSize="1.5em" />
     </div>
     <div class="data">
+      <h2>Senha</h2>
       <Views.TextEdit
+        type="password"
         placeHolder="Senha atual"
         bind:value={passwordObject.oldPass}
-    initialValue={passwordObject.oldPass}
-        secret={true}
-       
       />
       <Views.TextEdit
+        type="password"
         placeHolder="Nova senha"
         bind:value={passwordObject.newPass}
-    initialValue={passwordObject.newPass}
-        secret={true}
-       
+        bind:isValid={passwordValidationObject.newPass}
+        error="A senha deve ter um tamanho entre 8 e 40 caracteres e contendo no mínimo
+        uma letra maiúscula, uma letra minúscula, um número e um símbolo"
       />
-      <small
-        >A senha deve ter um tamanho entre 8 e 40 caracteres e contendo no mínimo
-        uma letra maiúscula, uma letra minúscula, um número e um símbolo</small
-      >
       <Views.TextEdit
+        type="password"
         placeHolder="Confirmação"
         bind:value={passwordObject.reNewPass}
-    initialValue={passwordObject.reNewPass}
-        secret={true}
-       
+        bind:isValid={passwordValidationObject.reNewPass}
+        validation={(password) => passwordObject.newPass === password}
+        error="A confirmação da senha não é válida"
       />
       <Views.Divider />
       <Views.Button on:click={editPassword}>Atualizar senha</Views.Button>

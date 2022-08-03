@@ -70,7 +70,7 @@
         orders: null,
         coupons: null,
         billing: null,
-        support,
+        support: [],
       },
       edit: false,
     });
