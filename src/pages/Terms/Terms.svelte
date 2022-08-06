@@ -130,7 +130,7 @@
             ><Fa icon={faEdit} /></span
           >
           <h2>{term.name}</h2>
-          <div>Tipo: {Types.TermTypes[term.type]}</div>
+          <div>Tipo: {new Types.TermTypes(term.type).description}</div>
 
           <Views.Switch
             name="Ativo:"

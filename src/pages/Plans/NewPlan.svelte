@@ -145,6 +145,9 @@
           marginTop="0"
           checked={item?.support?.includes(support?.id)}
           on:check={(event) => {
+            if(!item?.support || item?.support === undefined){
+              item.support = []
+            }
             const index = item?.support?.indexOf(support?.id);
             if ((index ?? -1) > -1) {
               item?.support?.splice(index, 1);

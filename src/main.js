@@ -1,7 +1,7 @@
 import App from './App.svelte';
 import { Network } from '@ikomida/components';
 
-const isProd = false
+let isProd = false
 try{
     isProd = (isProduction !== undefined && isProduction) 
 }catch(error){
