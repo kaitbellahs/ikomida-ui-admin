@@ -98,7 +98,7 @@
 />
 {#if logedIn}
   <main
-    style="margin-top:{styleHeight};padding: 20px; padding-top: 0; padding-bottom: 0; margin-bottom: {$_StatusBar.bottomPadding}; overflow: hidden;max-width: 100%; "
+    style="margin-top:{styleHeight};padding: 20px; padding-top: 0; padding-bottom: 0; margin-bottom: {$_StatusBar.bottomPadding};  "
   >
     <div>
       {#if route == Routes.about}

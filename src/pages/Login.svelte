@@ -40,7 +40,11 @@
   <Views.Loading />
 {/if}
 <main>
-  <h1>Login!</h1>
+  <div class="avatar">
+    <img src="/Assets/Icons/transparent-logo-1.svg" alt="iKomida" />
+  </div>
+  <h1>Login</h1>
+  <small>Esta é uma área restrita para pessoas autorizadas, se você recebeu este app e você não está dentre essas pessoas entre em contato conosco.</small>
   <Views.TextEdit
     bind:value={phone}
     initialValue={phone}
@@ -69,20 +73,33 @@
 
 <style>
   main {
-    text-align: center;
-    padding: 1em;
-    min-width: 90%;
-    margin: 0 auto;
+	align-items: center;
+	place-content: center;
   }
 
   h1 {
     color: #ff3e00;
     text-transform: uppercase;
-    font-size: 4em;
+    font-size: 3em;
     font-weight: 100;
+    margin: 0;
   }
-  main > p,
   main > div {
     margin-bottom: 30px;
+  }
+  .avatar {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .avatar > img {
+    font-size: 3em;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 45px;
+    line-height: 90px;
+    vertical-align: middle;
+    display: table-cell;
+    overflow: hidden;
   }
 </style>

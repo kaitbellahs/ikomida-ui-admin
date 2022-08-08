@@ -123,8 +123,8 @@
 >
 <Views.Divider />
 {#if plans}
-  <section>
-    {#if plans.length > 0}
+  {#if plans.length > 0}
+    <section>
       {#each plans as plan}
         <article>
           <span on:click={onRemoveClick(plan.id)} class="remove"
@@ -151,10 +151,10 @@
           >carregar mais</Views.Button
         >
       {/if}
-    {:else}
-      Não há planos para exibir!
-    {/if}
-  </section>
+    </section>
+  {:else}
+    <Views.CentredMessage text="Não há planos para exibir!" />
+  {/if}
 {/if}
 
 {#if isLoading || !plans}

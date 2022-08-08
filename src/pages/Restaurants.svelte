@@ -85,12 +85,12 @@
     ><Fa icon={faEdit} /> <span>Cadastrar novo Restaurante</span></Views.Button
   >
   <Views.Divider />
-  <!-- <section bind:offsetHeight={listHeight}> -->
-  <section>
-    {#if restaurants.length > 0}
+  {#if restaurants.length > 0}
+    <section>
       {#each restaurants as restaurant}
         <article>
           <h2>{restaurant.restaurantName}</h2>
+          <div>ikomidaID: {restaurant.ikomidaID}</div>
           <div>Telefone: {Utils.Strings.formatAsPhone(restaurant.phone)}</div>
           <div>
             Data: {Utils.Strings.dateToDateString(restaurant.createdAt)}
@@ -105,10 +105,10 @@
           >carregar mais</Views.Button
         >
       {/if}
-    {:else}
-      Não há restaurantes para exibir!
-    {/if}
-  </section>
+    </section>
+  {:else}
+    <Views.CentredMessage text="Não há restaurantes para exibir!" />
+  {/if}
 {/if}
 <Views.MessageAlert object={errorAlert} bind:show={showAlert} />
 

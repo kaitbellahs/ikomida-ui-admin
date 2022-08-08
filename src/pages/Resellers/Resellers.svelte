@@ -64,8 +64,8 @@
     ><Fa icon={faEdit} /> <span>Novo vendedor</span></Views.Button
   >
   <Views.Divider />
-  <section>
-    {#if resellers.length > 0}
+  {#if resellers.length > 0}
+    <section>
       {#each resellers as reseller}
         <article>
           <h2>{reseller.name} {reseller.lastName}</h2>
@@ -81,10 +81,10 @@
           >carregar mais</Views.Button
         >
       {/if}
-    {:else}
-      Não há vendedores cadastrados para exibir!
-    {/if}
-  </section>
+    </section>
+  {:else}
+    <Views.CentredMessage text="Não há vendedores cadastrados para exibir!" />
+  {/if}
 {/if}
 
 <style>

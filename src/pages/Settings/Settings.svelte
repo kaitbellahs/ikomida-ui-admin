@@ -125,8 +125,8 @@
 >
 <Views.Divider />
 {#if settings}
-  <section>
-    {#if settings.length > 0}
+  {#if settings.length > 0}
+    <section>
       {#each settings as setting}
         <article>
           <span on:click={onRemoveClick(setting.id)} class="remove"
@@ -160,10 +160,12 @@
           >carregar mais</Views.Button
         >
       {/if}
-    {:else}
-      Não há settingos para exibir!
-    {/if}
-  </section>
+    </section>
+  {:else}
+    <Views.CentredMessage
+      text="Não há configurações cadastradas para exibir!"
+    />
+  {/if}
 {/if}
 
 {#if isLoading || !settings}

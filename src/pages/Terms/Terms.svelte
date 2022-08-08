@@ -27,11 +27,7 @@
       terms = Cache.getObject(CACHE_NAME);
       const newTerms = await getTerms(timestamp);
       hasMore = newTerms.length > 0;
-      terms = refresh
-        ? newTerms
-        : terms
-        ? [...terms, ...newTerms]
-        : newTerms;
+      terms = refresh ? newTerms : terms ? [...terms, ...newTerms] : newTerms;
       terms.sort((item1, item2) => item2.timestamp - item1.timestamp);
       Cache.setObject(CACHE_NAME, terms);
       canGetMore = refresh || lastTimestamp !== timestamp;
@@ -119,8 +115,8 @@
 >
 <Views.Divider />
 {#if terms}
-  <section>
-    {#if terms.length > 0}
+  {#if terms.length > 0}
+    <section>
       {#each terms as term}
         <article>
           <span on:click={onRemoveClick(term.id)} class="remove"
@@ -147,10 +143,10 @@
           >carregar mais</Views.Button
         >
       {/if}
-    {:else}
-      Não há termos para exibir!
-    {/if}
-  </section>
+    </section>
+  {:else}
+    <Views.CentredMessage text="Não há termos cadastradas para exibir!" />
+  {/if}
 {/if}
 
 {#if isLoading || !terms}
