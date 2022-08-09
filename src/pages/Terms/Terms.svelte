@@ -119,12 +119,7 @@
     <section>
       {#each terms as term}
         <article>
-          <span on:click={onRemoveClick(term.id)} class="remove"
-            ><Fa icon={faTrashAlt} /></span
-          >
-          <span on:click={editTerm(term)} class="edit"
-            ><Fa icon={faEdit} /></span
-          >
+          <Views.FloatEdit callback={() => editTerm(term)} top="45" />
           <h2>{term.name}</h2>
           <div>Tipo: {new Types.TermTypes(term.type).description}</div>
 
@@ -166,37 +161,5 @@
     margin-top: 10px;
     padding: 10px;
     position: relative;
-  }
-  .remove {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    font-size: 1.3em;
-    color: white;
-    font-family: RobotoBold;
-    border: 1px solid #4c0708;
-    background: #4c0708;
-    border-radius: 20px;
-    width: 26px;
-    height: 26px;
-    vertical-align: middle;
-    text-align: center;
-    padding: 6px;
-  }
-  .edit {
-    position: absolute;
-    top: -8px;
-    right: 35px;
-    font-size: 0.9em;
-    color: white;
-    font-family: RobotoBold;
-    border: 1px solid #4c0708;
-    background: #4c0708;
-    border-radius: 20px;
-    width: 25px;
-    height: 25px;
-    vertical-align: middle;
-    text-align: center;
-    padding: 6px;
   }
 </style>

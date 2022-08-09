@@ -123,16 +123,10 @@
 >
 <Views.Divider />
 {#if plans}
-  {#if plans.length > 0}
+  {#if (plans?.length ?? 0) > 0}
     <section>
       {#each plans as plan}
         <article>
-          <span on:click={onRemoveClick(plan.id)} class="remove"
-            ><Fa icon={faTrashAlt} /></span
-          >
-          <span on:click={editPlan(plan)} class="edit"
-            ><Fa icon={faEdit} /></span
-          >
           <h2>{plan.name}</h2>
           <div>price: {Utils.Strings.currency(plan.price)}</div>
           <div>Data: {Utils.Strings.dateToDateString(plan.createdAt)}</div>

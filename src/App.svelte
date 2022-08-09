@@ -44,7 +44,7 @@
   } else {
     logedIn = false;
   }
-  $: styleHeight = `${(Number($_StatusBar.height) + 80)}px`;
+  $: styleHeight = `${Number($_StatusBar.height) + 50}px`;
 
   const pages = [
     {
@@ -98,7 +98,7 @@
 />
 {#if logedIn}
   <main
-    style="margin-top:{styleHeight};padding: 20px; padding-top: 0; padding-bottom: 0; margin-bottom: {$_StatusBar.bottomPadding};  "
+    style="padding: 20px;margin-top:{styleHeight}; overflow: scroll;max-width: 100%;background: #dfdfdf;height: 100%;{$_StatusBar.bottomPadding};  "
   >
     <div>
       {#if route == Routes.about}
@@ -137,6 +137,7 @@
     {Menu}
     {Title}
     paddingTop={$_StatusBar.height}
+    topMargin={$_StatusBar.topMargin}
     {Navigation}
   />
 {:else if route == Routes.login}

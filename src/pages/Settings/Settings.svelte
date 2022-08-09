@@ -129,14 +129,10 @@
     <section>
       {#each settings as setting}
         <article>
-          <span on:click={onRemoveClick(setting.id)} class="remove"
-            ><Fa icon={faTrashAlt} /></span
-          >
-          <span on:click={editSetting(setting)} class="edit"
-            ><Fa icon={faEdit} /></span
-          >
+          <Views.FloatRemove callback={() => onRemoveClick(setting.id)} />
+          <Views.FloatEdit callback={() => editSetting(setting)} top="45" />
           <h2>{setting.name}</h2>
-          <div>
+          <div class="value">
             value: {SettingTypes[setting.type] === SettingTypes.BOOL
               ? setting.value === 0
                 ? "false"
@@ -185,37 +181,12 @@
     margin-top: 10px;
     padding: 10px;
     position: relative;
+    overflow: hidden;
   }
-  .remove {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    font-size: 1.3em;
-    color: white;
-    font-family: RobotoBold;
-    border: 1px solid #4c0708;
-    background: #4c0708;
-    border-radius: 20px;
-    width: 26px;
-    height: 26px;
-    vertical-align: middle;
-    text-align: center;
-    padding: 6px;
-  }
-  .edit {
-    position: absolute;
-    top: -8px;
-    right: 35px;
-    font-size: 0.9em;
-    color: white;
-    font-family: RobotoBold;
-    border: 1px solid #4c0708;
-    background: #4c0708;
-    border-radius: 20px;
-    width: 25px;
-    height: 25px;
-    vertical-align: middle;
-    text-align: center;
-    padding: 6px;
+  section > article > .value {
+    padding: 10px 0;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
