@@ -23,7 +23,7 @@
     Menu,
     MenuHamburger,
   } from "./stores/Navigation";
-  import { StatusBar } from "@capacitor/status-bar";
+  import { StatusBar } from "@ikomida/capacitor-plugin-status-bar";
   import { Views, Utils } from "@ikomida/components";
   import { onMount } from "svelte";
   import {
