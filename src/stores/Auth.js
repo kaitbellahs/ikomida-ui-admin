@@ -2,8 +2,8 @@ import {
 	writable
 } from 'svelte/store';
 import {
-	Storage
-} from '@capacitor/storage';
+	Preferences
+} from '@capacitor/preferences';
 
 const authToken = 'AuthToken';
 
@@ -14,7 +14,7 @@ function createAuth() {
 	} = writable(null, async (setter) => {
 		let token = null;
 		try {
-			const ret = await Storage.get({
+			const ret = await Preferences.get({
 				key: authToken
 			});
 			token = ret.value;
@@ -31,7 +31,7 @@ function createAuth() {
 		setToken: async (payload) => {
 			try {
 				set(payload);
-				await Storage.set({
+				await Preferences.set({
 					key: authToken,
 					value: payload
 				});
