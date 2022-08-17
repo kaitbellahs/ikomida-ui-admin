@@ -6,7 +6,7 @@
   import { Utils } from "@ikomida/components";
 
   let isLoading = false;
-  let phone ;
+  let phone;
   let password;
   let validPhone = false;
   let validPassword = false;
@@ -41,10 +41,13 @@
 {/if}
 <main>
   <div class="avatar">
-    <img src="/Assets/Icons/transparent-logo-1.svg" alt="iKomida" />
+    <img src="/assets/Icons/transparent-logo-1.svg" alt="iKomida" />
   </div>
   <h1>Login</h1>
-  <small>Esta é uma área restrita para pessoas autorizadas, se você recebeu este app e você não está dentre essas pessoas entre em contato conosco.</small>
+  <small
+    >Esta é uma área restrita para pessoas autorizadas, se você recebeu este app
+    e você não está dentre essas pessoas entre em contato conosco.</small
+  >
   <Views.TextEdit
     bind:value={phone}
     initialValue={phone}
@@ -73,8 +76,8 @@
 
 <style>
   main {
-	align-items: center;
-	place-content: center;
+    align-items: center;
+    place-content: center;
   }
 
   h1 {
