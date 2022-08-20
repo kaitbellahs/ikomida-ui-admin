@@ -87,7 +87,6 @@
     placeHolder="Nome"
     bind:value={item.name}
     initialValue={item.name}
-   
   />
   <Views.Selector
     bind:selected={selectedSettingType}
@@ -96,25 +95,27 @@
   />
   {#if selectedSettingType}
     {#if selectedSettingType.name === SettingTypes.TEXT || selectedSettingType.name === SettingTypes.LIST}
-      <Views.TextEdit  type="text"placeHolder="Valor" bind:value={item.value}
-    initialValue={item.value} />
+      <Views.TextEdit
+        type="text"
+        placeHolder="Valor"
+        bind:value={item.value}
+        initialValue={item.value}
+      />
     {:else if selectedSettingType.name === SettingTypes.BOOL}
-      <Views.Switch placeHolder="Valor" bind:checked={item.value} />
+      <Views.Switch name="Valor" bind:checked={item.value} />
     {:else if selectedSettingType.name === SettingTypes.NUMBER}
       <Views.TextEdit
         placeHolder="Valor"
         bind:value={item.value}
-    initialValue={item.value}
+        initialValue={item.value}
         type="number"
-       
       />
     {:else if selectedSettingType.name === SettingTypes.CURRENCY}
       <Views.TextEdit
         placeHolder="Valor"
         bind:value={item.value}
-    initialValue={item.value}
+        initialValue={item.value}
         type="currency"
-       
       />
     {/if}
   {/if}

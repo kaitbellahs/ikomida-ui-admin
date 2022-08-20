@@ -125,7 +125,7 @@
 {#if plans}
   {#if (plans?.length ?? 0) > 0}
     <section>
-      {#each plans as plan}
+      {#each plans as plan (plan?.id)}
         <article>
           <h2>{plan.name}</h2>
           <div>price: {Utils.Strings.currency(plan.price)}</div>

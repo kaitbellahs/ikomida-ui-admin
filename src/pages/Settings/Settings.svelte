@@ -127,7 +127,7 @@
 {#if settings}
   {#if settings.length > 0}
     <section>
-      {#each settings as setting}
+      {#each settings as setting (setting?.id)}
         <article>
           <Views.FloatRemove callback={() => onRemoveClick(setting.id)} />
           <Views.FloatEdit callback={() => editSetting(setting)} top="45" />

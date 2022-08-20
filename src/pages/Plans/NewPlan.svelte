@@ -82,21 +82,21 @@
     bind:value={item.price}
     initialValue={item.price}
   />
-  <Views.Switch placeHolder="Destacado" bind:checked={item.highlighted} />
+  <Views.Switch name="Destacado" bind:checked={item.highlighted} />
   <Views.Selector
     bind:selected={selectedDiscountType}
     name="selecione uma opção"
     options={Types.DiscountTypes.list}
   />
   {#if selectedDiscountType}
-    {#if selectedDiscountType.name === Types.DiscountTypes.PERCENT}
+    {#if selectedDiscountType.id === Types.DiscountTypes.PERCENT}
       <Views.TextEdit
         type="percent"
         placeHolder="Valor"
         bind:value={item.discount}
         initialValue={item.discount}
       />
-    {:else if selectedDiscountType.name === Types.DiscountTypes.VALUE}
+    {:else if selectedDiscountType.id === Types.DiscountTypes.VALUE}
       <Views.TextEdit
         placeHolder="Valor"
         bind:value={item.discount}
@@ -139,14 +139,14 @@
 
   <h3>Meios de suporte</h3>
   <div class="supports">
-    {#each Types.SupportTypes.list as support}
+    {#each Types.SupportTypes.list as support (support?.id)}
       <div class="support">
         <Views.Checkbox
           marginTop="0"
           checked={item?.support?.includes(support?.id)}
           on:check={(event) => {
-            if(!item?.support || item?.support === undefined){
-              item.support = []
+            if (!item?.support || item?.support === undefined) {
+              item.support = [];
             }
             const index = item?.support?.indexOf(support?.id);
             if ((index ?? -1) > -1) {
@@ -161,7 +161,7 @@
       </div>
     {/each}
   </div>
-  {#each item?.details as detail}
+  {#each item?.details as detail (detail.key)}
     <div class="twoCells">
       <Views.TextEdit
         placeHolder="key"

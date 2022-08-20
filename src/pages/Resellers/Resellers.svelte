@@ -66,7 +66,7 @@
   <Views.Divider />
   {#if resellers.length > 0}
     <section>
-      {#each resellers as reseller}
+      {#each resellers as reseller (reseller?.id)}
         <article>
           <h2>{reseller.name} {reseller.lastName}</h2>
           <div>Telefone: {Utils.Strings.formatAsPhone(reseller.phone)}</div>

@@ -117,7 +117,7 @@
 {#if terms}
   {#if terms.length > 0}
     <section>
-      {#each terms as term}
+      {#each terms as term (term?.id)}
         <article>
           <Views.FloatEdit callback={() => editTerm(term)} top="45" />
           <h2>{term.name}</h2>
