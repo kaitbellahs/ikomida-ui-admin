@@ -1,12 +1,6 @@
 import {
     Network
 } from "@ikomida/components";
-import {
-    get
-} from 'svelte/store';
-import {
-    Auth
-} from '../stores/Auth';
 
 export async function doLogin(areaCode, phone, password) {
     return Network.instance.post("/auth", null, {
@@ -17,5 +11,9 @@ export async function doLogin(areaCode, phone, password) {
 }
 
 export async function updatePassword(object) {
-    return Network.instance.post("/password", get(Auth), object, "updatePassword");
+    return Network.instance.post("/password", true, object, "updatePassword");
+}
+
+export async function logout() {
+    return Network.instance.logout();
 }

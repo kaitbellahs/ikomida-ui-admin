@@ -13,18 +13,10 @@
   import NewSetting from "./pages/Settings/NewSetting.svelte";
   import Terms from "./pages/Terms/Terms.svelte";
   import NewTerm from "./pages/Terms/NewTerm.svelte";
-  import { Auth } from "./stores/Auth";
   import { StatusBar as _StatusBar } from "./stores/Setup";
-  import {
-    Router,
-    Routes,
-    Navigation,
-    Title,
-    Menu,
-    MenuHamburger,
-  } from "./stores/Navigation";
+  import Routes from "./stores/Routes";
   import { StatusBar } from "@ikomida/capacitor-plugin-status-bar";
-  import { Views, Utils } from "@ikomida/components";
+  import { Views, Utils, Stores } from "@ikomida/components";
   import { onMount } from "svelte";
   import {
     faHome,
@@ -34,11 +26,13 @@
   } from "@fortawesome/free-solid-svg-icons";
 
   let logedIn = false;
-  $: route = $Router.route;
+  let router = Stores.Navigation.instance.router;
+  $: route = $router.route;
+  let auth;
 
-  $: if ($Auth) {
+  $: if ($auth) {
     logedIn = false;
-    Utils.Jws.extractToken($Auth).then((token) => {
+    Utils.Jws.extractToken($auth).then((token) => {
       logedIn = token !== null;
     });
   } else {
@@ -49,44 +43,45 @@
   const pages = [
     {
       name: "Home",
-      callback: () => Navigation.goTo(Routes.home),
+      callback: () => Stores.Navigation.instance.goTo(Routes.home),
       icon: faHome,
     },
     {
       name: "Plans",
-      callback: () => Navigation.goTo(Routes.plans),
+      callback: () => Stores.Navigation.instance.goTo(Routes.plans),
       icon: faSitemap,
     },
     {
       name: "Restaurantes",
-      callback: () => Navigation.goTo(Routes.restaurants),
+      callback: () => Stores.Navigation.instance.goTo(Routes.restaurants),
       icon: faCutlery,
     },
     {
       name: "Resellers",
-      callback: () => Navigation.goTo(Routes.resellers),
+      callback: () => Stores.Navigation.instance.goTo(Routes.resellers),
       icon: faCutlery,
     },
     {
       name: "Configurações",
-      callback: () => Navigation.goTo(Routes.settings),
+      callback: () => Stores.Navigation.instance.goTo(Routes.settings),
       icon: faCutlery,
     },
     {
       name: "Termos",
-      callback: () => Navigation.goTo(Routes.terms),
+      callback: () => Stores.Navigation.instance.goTo(Routes.terms),
       icon: faCutlery,
     },
     {
       name: "Perfil",
-      callback: () => Navigation.goTo(Routes.profile),
+      callback: () => Stores.Navigation.instance.goTo(Routes.profile),
       icon: faUser,
     },
   ];
-  MenuHamburger.reset();
-  pages.forEach((page) => MenuHamburger.addItem(page));
+  Stores.MenuHamburger.instance.reset();
+  pages.forEach((page) => Stores.MenuHamburger.instance.addItem(page));
 
   onMount(async () => {
+    auth = await Stores.Auth.instance.store();
     if (Capacitor.isNativePlatform()) {
       _StatusBar.setStatusBar(await StatusBar.getInfo());
     }
@@ -133,12 +128,8 @@
     </div>
   </main>
   <Views.NavigationBar
-    {MenuHamburger}
-    {Menu}
-    {Title}
     paddingTop={$_StatusBar.height}
     topMargin={$_StatusBar.topMargin}
-    {Navigation}
   />
 {:else if route == Routes.login}
   <Login />

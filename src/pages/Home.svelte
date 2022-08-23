@@ -1,5 +1,4 @@
 <script>
-  import { Title } from "../stores/Navigation";
   import {
     countResellers,
     countRestaurants,
@@ -8,9 +7,9 @@
     countUsers,
     countCoupons,
   } from "../network/Quantities";
-  import { Views } from "@ikomida/components";
+  import { Views, Stores } from "@ikomida/components";
 
-  Title.set("Dashboard");
+  Stores.Title.instance.set("Dashboard");
 </script>
 
 <section>

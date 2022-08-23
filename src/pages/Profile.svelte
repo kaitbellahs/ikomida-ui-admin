@@ -1,13 +1,13 @@
 <script>
-  import { Auth } from "../stores/Auth";
-  import { updatePassword } from "../network/Auth";
-  import { Title } from "../stores/Navigation";
-  import { Views, Utils } from "@ikomida/components";
+  import { updatePassword, logout } from "../network/Auth";
+  import { Views, Utils, Stores } from "@ikomida/components";
   import { onMount } from "svelte";
   import { StatusBar } from "../stores/Setup";
 
   let userInfo;
-  let isLoading = false;
+  let auth;
+
+  let isLoading = true;
   let errorAlert;
   let showAlert = false;
   let passwordObject = {
@@ -24,13 +24,17 @@
     showAlert = true;
   }
 
-  onMount(async () => {
-    userInfo = await Utils.Jws.extractToken($Auth);
-  });
-
-  function logout() {
-    Auth.setToken(null);
+  async function out() {
+    isLoading = true;
+    await logout();
+    isLoading = false;
   }
+
+  onMount(async () => {
+    auth = await Stores.Auth.instance.store();
+    userInfo = await Utils.Jws.extractToken($auth);
+    isLoading = false;
+  });
 
   async function editPassword() {
     if (!passwordValidationObject.newPass) {
@@ -52,7 +56,7 @@
     isLoading = false;
   }
 
-  Title.set("Perfil");
+  Stores.Title.instance.set("Perfil");
 </script>
 
 {#if userInfo}
@@ -102,7 +106,7 @@
       <Views.Divider />
       <Views.Button on:click={editPassword}>Atualizar senha</Views.Button>
     </div>
-    <Views.Button type="transparent" on:click={logout}>Logout</Views.Button>
+    <Views.Button type="transparent" on:click={out}>Logout</Views.Button>
   </div>
   <Views.GTerms />
 {/if}

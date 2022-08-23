@@ -1,16 +1,12 @@
 <script>
-  import { Title, Navigation, Routes, Menu } from "../../stores/Navigation";
+  import Routes from "../../stores/Routes";
   import { getPlans, removePlan, activatePlan } from "../../network/Plans";
-  import { Views, Utils, Types } from "@ikomida/components";
+  import { Views, Utils, Stores } from "@ikomida/components";
+
   import { StatusBar } from "../../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import {
-    faEdit,
-    faTrashAlt,
-    faSync,
-  } from "@fortawesome/free-solid-svg-icons";
-  import Cache from "../../stores/Cache";
+  import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
 
   let plans;
   const CACHE_NAME = "PLANS";
@@ -24,31 +20,36 @@
         ? 0
         : plans?.[plans.length - 1]?.timestamp ?? -1;
       canGetMore = false;
-      plans = Cache.getObject(CACHE_NAME);
+      plans = Stores.Cache.instance?.getObject(CACHE_NAME);
       const newPlans = await getPlans(timestamp);
       hasMore = newPlans.length > 0;
       plans = refresh ? newPlans : plans ? [...plans, ...newPlans] : newPlans;
       plans.sort((item1, item2) => item2.timestamp - item1.timestamp);
-      Cache.setObject(CACHE_NAME, plans);
+      Stores.Cache.instance?.setObject(CACHE_NAME, plans);
       canGetMore = refresh || lastTimestamp !== timestamp;
       lastTimestamp = timestamp;
     }
   }
 
   onMount(async () => {
-    plans = Cache.getObject(CACHE_NAME);
+    plans = Stores.Cache.instance?.getObject(CACHE_NAME);
     if (!plans) {
       await getMore(null, true);
     }
+    isLoading = false;
   });
 
   async function refresh() {
     await getMore(null, true);
   }
 
-  Menu.addItem({ name: "Atualizar", icon: faSync, callback: refresh });
+  Stores.Menu.instance.addItem({
+    name: "Atualizar",
+    icon: faSync,
+    callback: refresh,
+  });
 
-  let isLoading = false;
+  let isLoading = true;
   let errorAlert;
   let showAlert = false;
   function toggleErrorAlert(messageObject) {
@@ -56,7 +57,7 @@
     showAlert = true;
   }
   async function newPlan() {
-    Navigation.goTo(Routes.newPlan, {
+    Stores.Navigation.instance.goTo(Routes.newPlan, {
       item: {
         name: null,
         price: null,
@@ -76,7 +77,7 @@
     });
   }
   async function editPlan(item) {
-    Navigation.goTo(Routes.newPlan, {
+    Stores.Navigation.instance.goTo(Routes.newPlan, {
       item,
       edit: true,
     });
@@ -115,7 +116,7 @@
     }
     isLoading = false;
   }
-  Title.set("Planos");
+  Stores.Title.instance.set("Planos");
 </script>
 
 <Views.Button on:click={newPlan} bottomPadding={$StatusBar.bottomPadding}

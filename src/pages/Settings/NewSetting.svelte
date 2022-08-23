@@ -1,15 +1,15 @@
 <script>
-  import { Title, Navigation, Router } from "../../stores/Navigation";
   import Fa from "svelte-fa";
-  import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
+  import { faEdit } from "@fortawesome/free-solid-svg-icons";
   import { StatusBar } from "../../stores/Setup";
-  import { Views } from "@ikomida/components";
+  import { Views, Stores } from "@ikomida/components";
   import { newSetting, editSetting } from "../../network/Settings";
   import SettingTypes from "../../types/SettingTypes";
   import { onMount } from "svelte";
 
-  let { item, edit } = $Router.options;
-  let isLoading = false;
+  const router = Stores.Navigation.instance.router;
+  const { item, edit } = $router.options;
+  let isLoading = true;
   let errorAlert;
   let showAlert = false;
   function toggleErrorAlert(messageObject) {
@@ -24,6 +24,7 @@
       (option) => option.id == item.type
     )?.[0];
     selectedSettingType = oldSelectedSettingType;
+    isLoading = false;
   });
   $: if (
     selectedSettingType &&
@@ -63,7 +64,7 @@
       response = await newSetting(item);
     }
     if (response.success) {
-      Navigation.pop();
+      Stores.Navigation.instance.pop();
     } else {
       toggleErrorAlert(response?.data);
       isLoading = false;
@@ -71,7 +72,7 @@
     }
     isLoading = false;
   };
-  Title.set("Nova configuração");
+  Stores.Title.instance.set("Nova configuração");
 </script>
 
 {#if isLoading}

@@ -1,21 +1,17 @@
 <script>
-  import { Title, Navigation, Routes, Menu } from "../../stores/Navigation";
+  import Routes from "../../stores/Routes";
   import {
     getSettings,
     removeSetting,
     activateSetting,
   } from "../../network/Settings";
-  import { Views, Utils } from "@ikomida/components";
+  import { Views, Stores } from "@ikomida/components";
+
   import { StatusBar } from "../../stores/Setup";
   import SettingTypes from "../../types/SettingTypes";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import {
-    faEdit,
-    faTrashAlt,
-    faSync,
-  } from "@fortawesome/free-solid-svg-icons";
-  import Cache from "../../stores/Cache";
+  import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
   let settings;
 
   const CACHE_NAME = "SETTINGS";
@@ -29,7 +25,7 @@
         ? 0
         : settings?.[settings.length - 1]?.timestamp ?? -1;
       canGetMore = false;
-      settings = Cache.getObject(CACHE_NAME);
+      settings = Stores.Cache.instance?.getObject(CACHE_NAME);
       const newSettings = await getSettings(timestamp);
       hasMore = newSettings.length > 0;
       settings = refresh
@@ -38,26 +34,31 @@
         ? [...settings, ...newSettings]
         : newSettings;
       settings.sort((item1, item2) => item2.timestamp - item1.timestamp);
-      Cache.setObject(CACHE_NAME, settings);
+      Stores.Cache.instance?.setObject(CACHE_NAME, settings);
       canGetMore = refresh || lastTimestamp !== timestamp;
       lastTimestamp = timestamp;
     }
   }
 
   onMount(async () => {
-    settings = Cache.getObject(CACHE_NAME);
+    settings = Stores.Cache.instance?.getObject(CACHE_NAME);
     if (!settings) {
       await getMore(null, true);
     }
+    isLoading = false;
   });
 
   async function refresh() {
     await getMore(null, true);
   }
 
-  Menu.addItem({ name: "Atualizar", icon: faSync, callback: refresh });
+  Stores.Menu.instance.addItem({
+    name: "Atualizar",
+    icon: faSync,
+    callback: refresh,
+  });
 
-  let isLoading = false;
+  let isLoading = true;
   let errorAlert;
   let showAlert = false;
   function toggleErrorAlert(messageObject) {
@@ -66,7 +67,7 @@
   }
 
   async function newSetting() {
-    Navigation.goTo(Routes.newSetting, {
+    Stores.Navigation.instance.goTo(Routes.newSetting, {
       item: {
         id: null,
         name: null,
@@ -77,7 +78,7 @@
     });
   }
   async function editSetting(item) {
-    Navigation.goTo(Routes.newSetting, {
+    Stores.Navigation.instance.goTo(Routes.newSetting, {
       item,
       edit: true,
     });
@@ -117,7 +118,7 @@
     isLoading = false;
   }
 
-  Title.set("Configurções");
+  Stores.Title.instance.set("Configurções");
 </script>
 
 <Views.Button on:click={newSetting} bottomPadding={$StatusBar.bottomPadding}

@@ -1,14 +1,13 @@
 <script>
-  import { Title, Menu } from "../stores/Navigation";
   import { getRestaurants } from "../network/Resellers";
-  import { Views, Utils } from "@ikomida/components";
+  import { Views, Utils,
+    Stores } from "@ikomida/components";
   import { StatusBar } from "../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
   import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
   import { AppLauncher } from "@capacitor/app-launcher";
-  import { Clipboard } from "@capacitor/clipboard";
-  import Cache from "../stores/Cache";
+  import { Clipboard } from "@capacitor/clipboard";\
 
   let restaurants;
   let errorAlert;
@@ -25,7 +24,7 @@
         ? 0
         : restaurants?.[restaurants.length - 1]?.timestamp ?? -1;
       canGetMore = false;
-      restaurants = Cache.getObject(CACHE_NAME);
+      restaurants = Stores.Cache.instance?.getObject(CACHE_NAME);
       const newRestaurants = await getRestaurants(timestamp);
       hasMore = newRestaurants.length > 0;
       restaurants = refresh
@@ -34,14 +33,14 @@
         ? [...restaurants, ...newRestaurants]
         : newRestaurants;
       restaurants.sort((item1, item2) => item2.timestamp - item1.timestamp);
-      Cache.setObject(CACHE_NAME, restaurants);
+      Stores.Cache.instance?.setObject(CACHE_NAME, restaurants);
       canGetMore = refresh || lastTimestamp !== timestamp;
       lastTimestamp = timestamp;
     }
   }
 
   onMount(async () => {
-    restaurants = Cache.getObject(CACHE_NAME);
+    restaurants = Stores.Cache.instance?.getObject(CACHE_NAME);
     if (!restaurants) {
       await getMore(null, true);
     }
@@ -50,7 +49,11 @@
     await getMore(null, true);
   }
 
-  Menu.addItem({ name: "Atualizar", icon: faSync, callback: refresh });
+  Stores.Menu.instance.addItem({
+    name: "Atualizar",
+    icon: faSync,
+    callback: refresh,
+  });
 
   function toggleErrorAlert(messageObject) {
     errorAlert = messageObject;
@@ -70,7 +73,7 @@
     }
   }
 
-  Title.set("Lista de retaurantes");
+  Stores.Title.instance.set("Lista de retaurantes");
 </script>
 
 {#if !restaurants}

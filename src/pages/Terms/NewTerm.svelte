@@ -1,14 +1,14 @@
 <script>
-  import { Title, Navigation, Router } from "../../stores/Navigation";
   import Fa from "svelte-fa";
-  import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
+  import { faEdit } from "@fortawesome/free-solid-svg-icons";
   import { StatusBar } from "../../stores/Setup";
-  import { Views, Types } from "@ikomida/components";
+  import { Views, Types, Stores } from "@ikomida/components";
   import { newTerm, editTerm } from "../../network/Terms";
   import { onMount } from "svelte";
 
-  let { item, edit } = $Router.options;
-  let isLoading = false;
+  const router = Stores.Navigation.instance.router;
+  const { item, edit } = $router.options;
+  let isLoading = true;
   let errorAlert;
   let showAlert = false;
   function toggleErrorAlert(messageObject) {
@@ -18,11 +18,12 @@
   let selectedTermType = null;
   let oldSelectedTermType = null;
 
-  onMount(() => {    
+  onMount(() => {
     selectedTermType = Types.TermTypes.list.filter(
       (option) => option.id == item?.type
     )?.[0];
     oldSelectedTermType = selectedTermType;
+    isLoading = false;
   });
   $: if (
     selectedTermType &&
@@ -52,7 +53,7 @@
       response = await newTerm(item);
     }
     if (response.success) {
-      Navigation.pop();
+      Stores.Navigation.instance.pop();
     } else {
       toggleErrorAlert(response?.data);
       isLoading = false;
@@ -60,7 +61,7 @@
     }
     isLoading = false;
   };
-  Title.set("Nova termo");
+  Stores.Title.instance.set("Nova termo");
 </script>
 
 {#if isLoading}

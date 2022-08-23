@@ -1,12 +1,12 @@
 <script>
-  import { Title, Navigation, Routes, Menu } from "../../stores/Navigation";
+  import Routes from "../../stores/Routes";
   import { getResellers } from "../../network/Resellers";
-  import { Views, Utils } from "@ikomida/components";
+  import { Views, Utils, Stores } from "@ikomida/components";
+
   import { StatusBar } from "../../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
   import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
-  import Cache from "../../stores/Cache";
   let resellers;
 
   const CACHE_NAME = "RESELLERS";
@@ -20,7 +20,7 @@
         ? 0
         : resellers?.[resellers.length - 1]?.timestamp ?? -1;
       canGetMore = false;
-      resellers = Cache.getObject(CACHE_NAME);
+      resellers = Stores.Cache.instance?.getObject(CACHE_NAME);
       const newResellers = await getResellers(timestamp);
       hasMore = newResellers.length > 0;
       resellers = refresh
@@ -29,14 +29,14 @@
         ? [...resellers, ...newResellers]
         : newResellers;
       resellers.sort((item1, item2) => item2.timestamp - item1.timestamp);
-      Cache.setObject(CACHE_NAME, resellers);
+      Stores.Cache.instance?.setObject(CACHE_NAME, resellers);
       canGetMore = refresh || lastTimestamp !== timestamp;
       lastTimestamp = timestamp;
     }
   }
 
   onMount(async () => {
-    resellers = Cache.getObject(CACHE_NAME);
+    resellers = Stores.Cache.instance?.getObject(CACHE_NAME);
     if (!resellers) {
       await getMore(null, true);
     }
@@ -46,12 +46,16 @@
     await getMore(null, true);
   }
 
-  Menu.addItem({ name: "Atualizar", icon: faSync, callback: refresh });
+  Stores.Menu.instance.addItem({
+    name: "Atualizar",
+    icon: faSync,
+    callback: refresh,
+  });
 
   async function newReseller() {
-    Navigation.goTo(Routes.newReseller);
+    Stores.Navigation.instance.goTo(Routes.newReseller);
   }
-  Title.set("Lista de vendedores");
+  Stores.Title.instance.set("Lista de vendedores");
 </script>
 
 {#if !resellers}

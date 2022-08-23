@@ -1,14 +1,14 @@
 <script>
-  import { Title, Navigation, Router } from "../../stores/Navigation";
   import Fa from "svelte-fa";
   import { faEdit } from "@fortawesome/free-solid-svg-icons";
   import { StatusBar } from "../../stores/Setup";
-  import { Views, Types } from "@ikomida/components";
+  import { Views, Types, Stores } from "@ikomida/components";
   import { newPlan, editPlan } from "../../network/Plans";
   import { onMount } from "svelte";
 
-  let { item, edit } = $Router.options;
-  let isLoading = false;
+  const router = Stores.Navigation.instance.router;
+  const { item, edit } = $router.options;
+  let isLoading = true;
   let errorAlert;
   let showAlert = false;
   let selectedDiscountType;
@@ -43,7 +43,7 @@
       response = await newPlan(item);
     }
     if (response.success) {
-      Navigation.pop();
+      Stores.Navigation.instance.pop();
     } else {
       toggleErrorAlert(response?.data);
     }
@@ -53,8 +53,9 @@
     selectedDiscountType = Types.DiscountTypes.list.filter(
       (type) => type.id === item.discountType
     )?.[0];
+    isLoading = false;
   });
-  Title.set(edit ? "Editar plano" : "Novo plano");
+  Stores.Title.instance.set(edit ? "Editar plano" : "Novo plano");
 </script>
 
 {#if isLoading}

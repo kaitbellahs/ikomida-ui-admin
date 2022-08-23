@@ -1,10 +1,10 @@
 <script>
-  import { Title, Navigation } from "../../stores/Navigation";
   import Fa from "svelte-fa";
   import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
   import { StatusBar } from "../../stores/Setup";
-  import { Views, Utils } from "@ikomida/components";
+  import { Views, Utils, Stores } from "@ikomida/components";
   import { newReseller, GetAddressByCep } from "../../network/Resellers";
+  import { onMount } from "svelte";
 
   let items = {
     name: null,
@@ -55,7 +55,7 @@
       stat: false,
     },
   };
-  let isLoading = false;
+  let isLoading = true;
   let currentPostalCode = null;
   let errorAlert;
   let showAlert = false;
@@ -100,13 +100,16 @@
     isLoading = true;
     let response = await newReseller(items);
     if (response.success) {
-      Navigation.pop();
+      Stores.Navigation.instance.pop();
     } else {
       toggleErrorAlert(response?.data);
     }
     isLoading = false;
   };
-  Title.set("Novo vendedor");
+  onMount(() => {
+    isLoading = false;
+  });
+  Stores.Title.instance.set("Novo vendedor");
 </script>
 
 {#if isLoading}

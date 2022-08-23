@@ -1,11 +1,11 @@
 <script>
-  import { Auth } from "../stores/Auth";
   import * as AuthNetwork from "../network/Auth";
   import { Views } from "@ikomida/components";
   import { faPhone, faUnlock } from "@fortawesome/free-solid-svg-icons";
-  import { Utils } from "@ikomida/components";
+  import { Utils, Stores } from "@ikomida/components";
+  import { onMount } from "svelte";
 
-  let isLoading = false;
+  let isLoading = true;
   let phone;
   let password;
   let validPhone = false;
@@ -25,7 +25,7 @@
     if (response?.success) {
       const token = await Utils.Jws.extractToken(response?.data);
       if (token !== null) {
-        Auth.setToken(response?.data);
+        Stores.Auth.instance.setToken(response?.data);
       } else {
         toggleErrorAlert("Token não é valido");
       }
@@ -34,6 +34,9 @@
     }
     isLoading = false;
   }
+  onMount(() => {
+    isLoading = false;
+  });
 </script>
 
 {#if isLoading}
