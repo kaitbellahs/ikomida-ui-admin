@@ -1,61 +1,17 @@
 <script>
   import Routes from "../../stores/Routes";
-  import { getTerms, removeTerm, activateTerm } from "../../network/Terms";
+  import { removeTerm, activateTerm } from "../../network/Terms";
   import { Views, Types, Stores } from "@ikomida/components";
 
   import { StatusBar } from "../../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
-  let terms;
-
-  const CACHE_NAME = "TERMS";
-  let hasMore = true;
-  let canGetMore = true;
-  let lastTimestamp = null;
-
-  async function getMore(e, refresh = false) {
-    if (refresh || (canGetMore && hasMore)) {
-      const timestamp = refresh
-        ? 0
-        : terms?.[terms.length - 1]?.timestamp ?? -1;
-      canGetMore = false;
-      terms = Stores.Cache.instance?.getObject(CACHE_NAME);
-      const newTerms = await getTerms(timestamp);
-      hasMore = newTerms.length > 0;
-      terms = refresh ? newTerms : terms ? [...terms, ...newTerms] : newTerms;
-      terms.sort((item1, item2) => item2.timestamp - item1.timestamp);
-      Stores.Cache.instance?.setObject(CACHE_NAME, terms);
-      canGetMore = refresh || lastTimestamp !== timestamp;
-      lastTimestamp = timestamp;
-    }
-  }
+  import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
   onMount(async () => {
-    terms = Stores.Cache.instance?.getObject(CACHE_NAME);
-    if (!terms) {
-      await getMore(null, true);
-    }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   });
 
-  async function refresh() {
-    await getMore(null, true);
-  }
-
-  Stores.Menu.instance.addItem({
-    name: "Atualizar",
-    icon: faSync,
-    callback: refresh,
-  });
-
-  let isLoading = true;
-  let errorAlert;
-  let showAlert = false;
-  function toggleErrorAlert(messageObject) {
-    errorAlert = messageObject;
-    showAlert = true;
-  }
   async function newTerm() {
     Stores.Navigation.instance.goTo(Routes.newTerm, {
       item: {
@@ -75,21 +31,21 @@
     });
   }
   async function onRemoveClick(id) {
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response = await removeTerm(id);
     if (response.success) {
       terms = await getTerms();
     } else {
-      toggleErrorAlert(response?.data);
-      isLoading = false;
+      Stores.MessageAlert.instance.show(response?.data);
+      Stores.Loading.instance.stop();
       return;
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
   async function onActivateClick(id, event) {
     const checked = event.detail?.checked;
 
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response = await activateTerm({
       id,
       active: !checked,
@@ -97,8 +53,8 @@
     if (response && response?.success) {
       terms = await getTerms();
     } else {
-      isLoading = false;
-      toggleErrorAlert(response?.data);
+      Stores.Loading.instance.stop();
+      Stores.MessageAlert.instance.show(response?.data);
       terms = terms.map((term) => {
         if (term?.id === id) {
           term.active = !checked;
@@ -106,7 +62,7 @@
         return term;
       });
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
   Stores.Title.instance.set("Configurções");
 </script>
@@ -115,52 +71,31 @@
   ><Fa icon={faEdit} /> <span>Novo termo</span></Views.Button
 >
 <Views.Divider />
-{#if terms}
-  {#if terms.length > 0}
-    <section>
-      {#each terms as term (term?.id)}
-        <article>
-          <Views.FloatEdit callback={() => editTerm(term)} top="45" />
-          <h2>{term.name}</h2>
-          <div>Tipo: {new Types.TermTypes(term.type).description}</div>
+<Views.LoadMore
+  noItems="Não há termos para exibir!"
+  cache={Stores.Cache.Types.TERMS}
+  url="/admin/terms"
+  let:item
+>
+  <article>
+    <Views.FloatEdit callback={() => editTerm(item)} top="45" />
+    <h2>{item.name}</h2>
+    <div>Tipo: {new Types.TermTypes(item.type).description}</div>
 
-          <Views.Switch
-            name="Ativo:"
-            bind:checked={term.active}
-            on:check={(event) => onActivateClick(term.id, event)}
-          />
-        </article>
-      {/each}
-      <Views.Divider />
-      {#if hasMore && !canGetMore}
-        <Views.LocalLoading />
-      {:else}
-        <Views.Button disabled={!hasMore || !canGetMore} on:click={getMore}
-          >carregar mais</Views.Button
-        >
-      {/if}
-    </section>
-  {:else}
-    <Views.CentredMessage text="Não há termos cadastradas para exibir!" />
-  {/if}
-{/if}
-
-{#if isLoading || !terms}
-  <Views.Loading
-    topPadding={$StatusBar.height}
-    bottomPadding={$StatusBar.bottomPadding}
-  />
-{/if}
-
-<Views.MessageAlert object={errorAlert} bind:show={showAlert} />
+    <!-- <Views.Switch
+      name="Ativo:"
+      bind:checked={item.active}
+      on:check={(event) => onActivateClick(item.id, event)}
+    /> -->
+  </article></Views.LoadMore
+>
 
 <style>
-  section > article {
+  article {
     position: relative;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-top: 10px;
     padding: 10px;
-    position: relative;
   }
 </style>

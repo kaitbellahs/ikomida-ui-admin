@@ -8,9 +8,6 @@
 
   const router = Stores.Navigation.instance.router;
   const { item, edit } = $router.options;
-  let isLoading = true;
-  let errorAlert;
-  let showAlert = false;
   let selectedDiscountType;
   let oldSelectedDiscountType = null;
   let discountTypeInput = null;
@@ -24,18 +21,13 @@
     oldSelectedDiscountType = selectedDiscountType;
   }
 
-  function toggleErrorAlert(messageObject) {
-    errorAlert = messageObject;
-    showAlert = true;
-  }
-
   const addDetail = () => {
     item?.details?.push({ key: null, value: null });
     item.details = item?.details;
   };
 
   const submit = async () => {
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response;
     if (edit) {
       response = await editPlan(item);
@@ -45,25 +37,19 @@
     if (response.success) {
       Stores.Navigation.instance.pop();
     } else {
-      toggleErrorAlert(response?.data);
+      Stores.MessageAlert.instance.show(response?.data);
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   };
   onMount(() => {
     selectedDiscountType = Types.DiscountTypes.list.filter(
       (type) => type.id === item.discountType
     )?.[0];
-    isLoading = false;
+    Stores.Loading.instance.stop();
   });
   Stores.Title.instance.set(edit ? "Editar plano" : "Novo plano");
 </script>
 
-{#if isLoading}
-  <Views.Loading
-    topPadding={$StatusBar.height}
-    bottomPadding={$StatusBar.bottomPadding}
-  />
-{/if}
 <div class="plan">
   <h2>Dados do plano</h2>
   <Views.TextEdit
@@ -184,7 +170,6 @@
   <Views.Button on:click={submit} bottomPadding={$StatusBar.bottomPadding}
     ><Fa icon={faEdit} /><span>Salvar</span></Views.Button
   >
-  <Views.MessageAlert object={errorAlert} bind:show={showAlert} />
 </div>
 
 <style>

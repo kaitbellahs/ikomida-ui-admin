@@ -6,10 +6,6 @@
 
   let userInfo;
   let auth;
-
-  let isLoading = true;
-  let errorAlert;
-  let showAlert = false;
   let passwordObject = {
     oldPass: null,
     newPass: null,
@@ -19,41 +15,39 @@
     newPass: false,
     reNewPass: false,
   };
-  function toggleErrorAlert(messageObject) {
-    errorAlert = messageObject;
-    showAlert = true;
-  }
 
   async function out() {
-    isLoading = true;
+    Stores.Loading.instance.start();
     await logout();
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
 
   onMount(async () => {
     auth = await Stores.Auth.instance.store();
     userInfo = await Utils.Jws.extractToken($auth);
-    isLoading = false;
+    Stores.Loading.instance.stop();
   });
 
   async function editPassword() {
     if (!passwordValidationObject.newPass) {
-      toggleErrorAlert("A nova senha não está correta!");
+      Stores.MessageAlert.instance.show("A nova senha não está correta!");
       return;
     } else if (!passwordValidationObject.reNewPass) {
-      toggleErrorAlert("A confirmação da senha não está correta");
+      Stores.MessageAlert.instance.show(
+        "A confirmação da senha não está correta"
+      );
       return;
     }
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response = await updatePassword(passwordObject);
     if (response.success) {
-      toggleErrorAlert("Senha atualizada com sucesso!");
+      Stores.MessageAlert.instance.show("Senha atualizada com sucesso!");
     } else {
-      toggleErrorAlert(response?.data);
-      isLoading = false;
+      Stores.MessageAlert.instance.show(response?.data);
+      Stores.Loading.instance.stop();
       return;
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
 
   Stores.Title.instance.set("Perfil");
@@ -116,7 +110,6 @@
     bottomPadding={$StatusBar.bottomPadding}
   />
 {/if}
-<Views.MessageAlert object={errorAlert} bind:show={showAlert} />
 
 <style>
   .profil {

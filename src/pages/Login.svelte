@@ -1,47 +1,38 @@
 <script>
   import * as AuthNetwork from "../network/Auth";
-  import { Views } from "@ikomida/components";
+  import { Views, Utils, Stores } from "@ikomida/components";
   import { faPhone, faUnlock } from "@fortawesome/free-solid-svg-icons";
-  import { Utils, Stores } from "@ikomida/components";
   import { onMount } from "svelte";
 
-  let isLoading = true;
   let phone;
   let password;
   let validPhone = false;
   let validPassword = false;
   let errorAlert;
   let showAlert = false;
-  function toggleErrorAlert(messageObject) {
-    errorAlert = messageObject;
-    showAlert = true;
-  }
 
   $: canLogin = validPhone && validPassword;
 
   async function doLogin() {
-    isLoading = true;
+    Stores.Loading.instance.start();
     const response = await AuthNetwork.doLogin(55, phone, password);
     if (response?.success) {
       const token = await Utils.Jws.extractToken(response?.data);
       if (token !== null) {
         Stores.Auth.instance.setToken(response?.data);
       } else {
-        toggleErrorAlert("Token não é valido");
+        Stores.MessageAlert.instance.show("Token não é valido");
       }
     } else {
-      toggleErrorAlert(response?.data);
+      Stores.MessageAlert.instance.show(response?.data);
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
   onMount(() => {
-    isLoading = false;
+    Stores.Loading.instance.stop();
   });
 </script>
 
-{#if isLoading}
-  <Views.Loading />
-{/if}
 <main>
   <div class="avatar">
     <img src="/assets/Icons/transparent-logo-1.svg" alt="iKomida" />
@@ -65,7 +56,6 @@
     initialValue={password}
     icon={faUnlock}
     placeHolder="Senha"
-    secret={true}
     error="A senha deve ter um tamanho entre 8 e 40 caracteres e contendo no mínimo
     uma letra maiúscula, uma letra minúscula, um número e um símbolo."
     bind:isValid={validPassword}
@@ -74,7 +64,6 @@
   <div />
   <Views.Button on:click={doLogin} disabled={!canLogin}>Entrar</Views.Button>
   <Views.GTerms />
-  <Views.MessageAlert object={errorAlert} bind:show={showAlert} />
 </main>
 
 <style>

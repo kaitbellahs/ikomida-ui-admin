@@ -11,5 +11,8 @@ export default {
     newSetting: Symbol("/newSetting"),
     terms: Symbol("/terms"),
     newTerm: Symbol("/newTerm"),
-    login: Symbol("/login")
+    login: Symbol("/login"),
+    contract: Symbol("/contract"),
+    apps: Symbol("/apps"),
+    app: Symbol("/app"),
 };

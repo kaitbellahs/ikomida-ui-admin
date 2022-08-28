@@ -3,7 +3,8 @@
   import Login from "./pages/Login.svelte";
   import Home from "./pages/Home.svelte";
   import Resellers from "./pages/Resellers/Resellers.svelte";
-  import Restaurants from "./pages/Restaurants.svelte";
+  import Contracts from "./pages/Contracts/Contracts.svelte";
+  import Contract from "./pages/Contracts/Contract.svelte";
   import NewReseller from "./pages/Resellers/NewReseller.svelte";
   import Profile from "./pages/Profile.svelte";
   import Result from "./pages/Result.svelte";
@@ -13,6 +14,8 @@
   import NewSetting from "./pages/Settings/NewSetting.svelte";
   import Terms from "./pages/Terms/Terms.svelte";
   import NewTerm from "./pages/Terms/NewTerm.svelte";
+  import Apps from "./pages/Apps/Apps.svelte";
+  import App from "./pages/Apps/App.svelte";
   import { StatusBar as _StatusBar } from "./stores/Setup";
   import Routes from "./stores/Routes";
   import { StatusBar } from "@ikomida/capacitor-plugin-status-bar";
@@ -52,13 +55,18 @@
       icon: faSitemap,
     },
     {
-      name: "Restaurantes",
+      name: "Contratos",
       callback: () => Stores.Navigation.instance.goTo(Routes.restaurants),
       icon: faCutlery,
     },
     {
       name: "Resellers",
       callback: () => Stores.Navigation.instance.goTo(Routes.resellers),
+      icon: faCutlery,
+    },
+    {
+      name: "Meus apps",
+      callback: () => Stores.Navigation.instance.goTo(Routes.apps),
       icon: faCutlery,
     },
     {
@@ -95,37 +103,41 @@
   <main
     style="padding: 20px;margin-top:{styleHeight}; overflow: scroll;max-width: 100%;background: #dfdfdf;height: 100%;{$_StatusBar.bottomPadding};  "
   >
-    <div>
-      {#if route == Routes.about}
-        <About />
-      {:else if route == Routes.home}
-        <Home />
-      {:else if route == Routes.resellers}
-        <Resellers />
-      {:else if route == Routes.restaurants}
-        <Restaurants />
-      {:else if route == Routes.newReseller}
-        <NewReseller />
-      {:else if route == Routes.profile}
-        <Profile />
-      {:else if route == Routes.result}
-        <Result />
-      {:else if route == Routes.plans}
-        <Plans />
-      {:else if route == Routes.newPlan}
-        <NewPlan />
-      {:else if route == Routes.settings}
-        <Settings />
-      {:else if route == Routes.newSetting}
-        <NewSetting />
-      {:else if route == Routes.terms}
-        <Terms />
-      {:else if route == Routes.newTerm}
-        <NewTerm />
-      {:else}
-        <Home />
-      {/if}
-    </div>
+    {#if route == Routes.about}
+      <About />
+    {:else if route == Routes.home}
+      <Home />
+    {:else if route == Routes.resellers}
+      <Resellers />
+    {:else if route == Routes.restaurants}
+      <Contracts />
+    {:else if route == Routes.newReseller}
+      <NewReseller />
+    {:else if route == Routes.profile}
+      <Profile />
+    {:else if route == Routes.result}
+      <Result />
+    {:else if route == Routes.plans}
+      <Plans />
+    {:else if route == Routes.newPlan}
+      <NewPlan />
+    {:else if route == Routes.settings}
+      <Settings />
+    {:else if route == Routes.newSetting}
+      <NewSetting />
+    {:else if route == Routes.terms}
+      <Terms />
+    {:else if route == Routes.newTerm}
+      <NewTerm />
+    {:else if route == Routes.contract}
+      <Contract />
+    {:else if route == Routes.apps}
+      <Apps />
+    {:else if route == Routes.app}
+      <App />
+    {:else}
+      <Home />
+    {/if}
   </main>
   <Views.NavigationBar
     paddingTop={$_StatusBar.height}
@@ -136,6 +148,11 @@
 {:else}
   <Login />
 {/if}
+<Views.Loading
+  topPadding={$_StatusBar.height}
+  bottomPadding={$_StatusBar.bottomPadding}
+/>
+<Views.MessageAlert />
 
 <style>
   :global(.grecaptcha-badge) {

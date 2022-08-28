@@ -1,6 +1,6 @@
 <script>
   import Routes from "../../stores/Routes";
-  import { getPlans, removePlan, activatePlan } from "../../network/Plans";
+  import { removePlan, activatePlan } from "../../network/Plans";
   import { Views, Utils, Stores } from "@ikomida/components";
 
   import { StatusBar } from "../../stores/Setup";
@@ -8,54 +8,10 @@
   import Fa from "svelte-fa";
   import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
 
-  let plans;
-  const CACHE_NAME = "PLANS";
-  let hasMore = true;
-  let canGetMore = true;
-  let lastTimestamp = null;
-
-  async function getMore(e, refresh = false) {
-    if (refresh || (canGetMore && hasMore)) {
-      const timestamp = refresh
-        ? 0
-        : plans?.[plans.length - 1]?.timestamp ?? -1;
-      canGetMore = false;
-      plans = Stores.Cache.instance?.getObject(CACHE_NAME);
-      const newPlans = await getPlans(timestamp);
-      hasMore = newPlans.length > 0;
-      plans = refresh ? newPlans : plans ? [...plans, ...newPlans] : newPlans;
-      plans.sort((item1, item2) => item2.timestamp - item1.timestamp);
-      Stores.Cache.instance?.setObject(CACHE_NAME, plans);
-      canGetMore = refresh || lastTimestamp !== timestamp;
-      lastTimestamp = timestamp;
-    }
-  }
-
   onMount(async () => {
-    plans = Stores.Cache.instance?.getObject(CACHE_NAME);
-    if (!plans) {
-      await getMore(null, true);
-    }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   });
 
-  async function refresh() {
-    await getMore(null, true);
-  }
-
-  Stores.Menu.instance.addItem({
-    name: "Atualizar",
-    icon: faSync,
-    callback: refresh,
-  });
-
-  let isLoading = true;
-  let errorAlert;
-  let showAlert = false;
-  function toggleErrorAlert(messageObject) {
-    errorAlert = messageObject;
-    showAlert = true;
-  }
   async function newPlan() {
     Stores.Navigation.instance.goTo(Routes.newPlan, {
       item: {
@@ -76,28 +32,23 @@
       edit: false,
     });
   }
-  async function editPlan(item) {
-    Stores.Navigation.instance.goTo(Routes.newPlan, {
-      item,
-      edit: true,
-    });
-  }
+
   async function onRemoveClick(id) {
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response = await removePlan(id);
     if (response.success) {
       plans = await getPlans();
     } else {
-      toggleErrorAlert(response?.data);
-      isLoading = false;
+      Stores.MessageAlert.instance.show(response?.data);
+      Stores.Loading.instance.stop();
       return;
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
   async function onActivateClick(id, event) {
     const checked = event.detail?.checked;
 
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response = await activatePlan({
       id,
       active: !checked,
@@ -105,8 +56,8 @@
     if (response && response?.success) {
       plans = await getPlans();
     } else {
-      isLoading = false;
-      toggleErrorAlert(response?.data);
+      Stores.Loading.instance.stop();
+      Stores.MessageAlert.instance.show(response?.data);
       plans = plans.map((plan) => {
         if (plan?.id === id) {
           plan.active = checked;
@@ -114,7 +65,7 @@
         return plan;
       });
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
   Stores.Title.instance.set("Planos");
 </script>
@@ -122,84 +73,30 @@
 <Views.Button on:click={newPlan} bottomPadding={$StatusBar.bottomPadding}
   ><Fa icon={faEdit} /> <span>Novo plano</span></Views.Button
 >
-<Views.Divider />
-{#if plans}
-  {#if (plans?.length ?? 0) > 0}
-    <section>
-      {#each plans as plan (plan?.id)}
-        <article>
-          <h2>{plan.name}</h2>
-          <div>price: {Utils.Strings.currency(plan.price)}</div>
-          <div>Data: {Utils.Strings.dateToDateString(plan.createdAt)}</div>
-          <Views.Switch
-            name="Ativo:"
-            bind:checked={plan.active}
-            on:check={(event) => onActivateClick(plan.id, event)}
-          />
-        </article>
-      {/each}
-      <Views.Divider />
-      {#if hasMore && !canGetMore}
-        <Views.LocalLoading />
-      {:else}
-        <Views.Button disabled={!hasMore || !canGetMore} on:click={getMore}
-          >carregar mais</Views.Button
-        >
-      {/if}
-    </section>
-  {:else}
-    <Views.CentredMessage text="Não há planos para exibir!" />
-  {/if}
-{/if}
-
-{#if isLoading || !plans}
-  <Views.Loading
-    topPadding={$StatusBar.height}
-    bottomPadding={$StatusBar.bottomPadding}
-  />
-{/if}
-
-<Views.MessageAlert object={errorAlert} bind:show={showAlert} />
+<Views.LoadMore
+  noItems="Não há planos para exibir!"
+  cache={Stores.Cache.Types.PLANS}
+  url="/admin/plans"
+  let:item
+>
+  <article>
+    <h2>{item.name}</h2>
+    <div>price: {Utils.Strings.currency(item.price)}</div>
+    <div>Data: {Utils.Strings.dateToDateString(item.createdAt)}</div>
+    <!-- <Views.Switch
+      name="Ativo:"
+      bind:checked={item.active}
+      on:check={(event) => onActivateClick(item.id, event)}
+    /> -->
+  </article>
+</Views.LoadMore>
 
 <style>
-  section > article {
+  article {
     position: relative;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-top: 10px;
     padding: 10px;
-    position: relative;
-  }
-  .remove {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    font-size: 1.3em;
-    color: white;
-    font-family: RobotoBold;
-    border: 1px solid #4c0708;
-    background: #4c0708;
-    border-radius: 20px;
-    width: 26px;
-    height: 26px;
-    vertical-align: middle;
-    text-align: center;
-    padding: 6px;
-  }
-  .edit {
-    position: absolute;
-    top: -8px;
-    right: 35px;
-    font-size: 0.9em;
-    color: white;
-    font-family: RobotoBold;
-    border: 1px solid #4c0708;
-    background: #4c0708;
-    border-radius: 20px;
-    width: 25px;
-    height: 25px;
-    vertical-align: middle;
-    text-align: center;
-    padding: 6px;
   }
 </style>

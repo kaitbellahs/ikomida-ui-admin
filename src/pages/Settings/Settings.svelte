@@ -11,60 +11,11 @@
   import SettingTypes from "../../types/SettingTypes";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
-  let settings;
-
-  const CACHE_NAME = "SETTINGS";
-  let hasMore = true;
-  let canGetMore = true;
-  let lastTimestamp = null;
-
-  async function getMore(e, refresh = false) {
-    if (refresh || (canGetMore && hasMore)) {
-      const timestamp = refresh
-        ? 0
-        : settings?.[settings.length - 1]?.timestamp ?? -1;
-      canGetMore = false;
-      settings = Stores.Cache.instance?.getObject(CACHE_NAME);
-      const newSettings = await getSettings(timestamp);
-      hasMore = newSettings.length > 0;
-      settings = refresh
-        ? newSettings
-        : settings
-        ? [...settings, ...newSettings]
-        : newSettings;
-      settings.sort((item1, item2) => item2.timestamp - item1.timestamp);
-      Stores.Cache.instance?.setObject(CACHE_NAME, settings);
-      canGetMore = refresh || lastTimestamp !== timestamp;
-      lastTimestamp = timestamp;
-    }
-  }
+  import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
   onMount(async () => {
-    settings = Stores.Cache.instance?.getObject(CACHE_NAME);
-    if (!settings) {
-      await getMore(null, true);
-    }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   });
-
-  async function refresh() {
-    await getMore(null, true);
-  }
-
-  Stores.Menu.instance.addItem({
-    name: "Atualizar",
-    icon: faSync,
-    callback: refresh,
-  });
-
-  let isLoading = true;
-  let errorAlert;
-  let showAlert = false;
-  function toggleErrorAlert(messageObject) {
-    errorAlert = messageObject;
-    showAlert = true;
-  }
 
   async function newSetting() {
     Stores.Navigation.instance.goTo(Routes.newSetting, {
@@ -84,21 +35,21 @@
     });
   }
   async function onRemoveClick(id) {
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response = await removeSetting(id);
     if (response.success) {
       settings = await getSettings();
     } else {
-      toggleErrorAlert(response?.data);
-      isLoading = false;
+      Stores.MessageAlert.instance.show(response?.data);
+      Stores.Loading.instance.stop();
       return;
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
   async function onActivateClick(id, event) {
     const checked = event.detail?.checked;
 
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response = await activateSetting({
       id,
       active: !checked,
@@ -106,8 +57,8 @@
     if (response && response?.success) {
       settings = await getSettings();
     } else {
-      isLoading = false;
-      toggleErrorAlert(response?.data);
+      Stores.Loading.instance.stop();
+      Stores.MessageAlert.instance.show(response?.data);
       settings = settings.map((setting) => {
         if (setting?.id === id) {
           setting.active = !checked;
@@ -115,7 +66,7 @@
         return setting;
       });
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   }
 
   Stores.Title.instance.set("Configurções");
@@ -125,66 +76,44 @@
   ><Fa icon={faEdit} /> <span>Nova configuração</span></Views.Button
 >
 <Views.Divider />
-{#if settings}
-  {#if settings.length > 0}
-    <section>
-      {#each settings as setting (setting?.id)}
-        <article>
-          <Views.FloatRemove callback={() => onRemoveClick(setting.id)} />
-          <Views.FloatEdit callback={() => editSetting(setting)} top="45" />
-          <h2>{setting.name}</h2>
-          <div class="value">
-            value: {SettingTypes[setting.type] === SettingTypes.BOOL
-              ? setting.value === 0
-                ? "false"
-                : "true"
-              : setting.value}
-          </div>
-          <div>Tipo: {SettingTypes[setting.type]}</div>
 
-          <Views.Switch
+<Views.LoadMore
+  noItems="Não há configurações para exibir!"
+  cache={Stores.Cache.Types.SETTINGS}
+  url="/admin/settings"
+  let:item
+>
+  <article>
+    <Views.FloatRemove callback={() => onRemoveClick(item.id)} />
+    <Views.FloatEdit callback={() => editSetting(item)} top="45" />
+    <h2>{item.name}</h2>
+    <div class="value">
+      value: {SettingTypes[item.type] === SettingTypes.BOOL
+        ? item.value === 0
+          ? "false"
+          : "true"
+        : item.value}
+    </div>
+    <div>Tipo: {SettingTypes[item.type]}</div>
+
+    <!-- <Views.Switch
             name="Ativo:"
-            bind:checked={setting.active}
-            on:check={(event) => onActivateClick(setting.id, event)}
-          />
-        </article>
-      {/each}
-      <Views.Divider />
-      {#if hasMore && !canGetMore}
-        <Views.LocalLoading />
-      {:else}
-        <Views.Button disabled={!hasMore || !canGetMore} on:click={getMore}
-          >carregar mais</Views.Button
-        >
-      {/if}
-    </section>
-  {:else}
-    <Views.CentredMessage
-      text="Não há configurações cadastradas para exibir!"
-    />
-  {/if}
-{/if}
-
-{#if isLoading || !settings}
-  <Views.Loading
-    topPadding={$StatusBar.height}
-    bottomPadding={$StatusBar.bottomPadding}
-  />
-{/if}
-
-<Views.MessageAlert object={errorAlert} bind:show={showAlert} />
+            bind:checked={item.active}
+            on:check={(event) => onActivateClick(item.id, event)}
+          /> -->
+  </article>
+</Views.LoadMore>
 
 <style>
-  section > article {
+  article {
     position: relative;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-top: 10px;
     padding: 10px;
-    position: relative;
     overflow: hidden;
   }
-  section > article > .value {
+  article > .value {
     padding: 10px 0;
     width: 100%;
     overflow: hidden;

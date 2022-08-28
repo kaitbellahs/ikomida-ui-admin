@@ -8,13 +8,6 @@
 
   const router = Stores.Navigation.instance.router;
   const { item, edit } = $router.options;
-  let isLoading = true;
-  let errorAlert;
-  let showAlert = false;
-  function toggleErrorAlert(messageObject) {
-    errorAlert = messageObject;
-    showAlert = true;
-  }
   let selectedTermType = null;
   let oldSelectedTermType = null;
 
@@ -23,7 +16,7 @@
       (option) => option.id == item?.type
     )?.[0];
     oldSelectedTermType = selectedTermType;
-    isLoading = false;
+    Stores.Loading.instance.stop();
   });
   $: if (
     selectedTermType &&
@@ -36,16 +29,16 @@
 
   const submit = async () => {
     if (item.name === null || item.name.length < 2) {
-      toggleErrorAlert("Nome deve ter mais que 3 carateres");
+      Stores.MessageAlert.instance.show("Nome deve ter mais que 3 carateres");
       return;
     } else if (item.text === null || item.text === "") {
-      toggleErrorAlert("Precisa digitar um texto");
+      Stores.MessageAlert.instance.show("Precisa digitar um texto");
       return;
     } else if (item.type === null || item.type === "") {
-      toggleErrorAlert("Precisa escolher um tipo");
+      Stores.MessageAlert.instance.show("Precisa escolher um tipo");
       return;
     }
-    isLoading = true;
+    Stores.Loading.instance.start();
     let response;
     if (edit) {
       response = await editTerm(item);
@@ -55,21 +48,15 @@
     if (response.success) {
       Stores.Navigation.instance.pop();
     } else {
-      toggleErrorAlert(response?.data);
-      isLoading = false;
+      Stores.MessageAlert.instance.show(response?.data);
+      Stores.Loading.instance.stop();
       return;
     }
-    isLoading = false;
+    Stores.Loading.instance.stop();
   };
   Stores.Title.instance.set("Nova termo");
 </script>
 
-{#if isLoading}
-  <Views.Loading
-    topPadding={$StatusBar.height}
-    bottomPadding={$StatusBar.bottomPadding}
-  />
-{/if}
 <div class="setting">
   <h2>Dados</h2>
   <Views.TextEdit
@@ -94,7 +81,6 @@
   <Views.Button on:click={submit} bottomPadding={$StatusBar.bottomPadding}
     ><Fa icon={faEdit} /> <span>Salvar</span></Views.Button
   >
-  <Views.MessageAlert object={errorAlert} bind:show={showAlert} />
 </div>
 
 <style>

@@ -8,8 +8,13 @@
     countCoupons,
   } from "../network/Quantities";
   import { Views, Stores } from "@ikomida/components";
+  import { onMount } from "svelte";
 
-  Stores.Title.instance.set("Dashboard");
+  onMount(async () => {
+    Stores.Loading.instance.stop();
+  });
+
+  Stores.Title.instance.set("Admin");
 </script>
 
 <section>
