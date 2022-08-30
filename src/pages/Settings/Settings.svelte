@@ -77,7 +77,7 @@
 >
 <Views.Divider />
 
-<Views.LoadMore
+<Views.LoadMoreReusableList
   noItems="Não há configurações para exibir!"
   cache={Stores.Cache.Types.SETTINGS}
   url="/admin/settings"
@@ -102,7 +102,7 @@
             on:check={(event) => onActivateClick(item.id, event)}
           /> -->
   </article>
-</Views.LoadMore>
+</Views.LoadMoreReusableList>
 
 <style>
   article {

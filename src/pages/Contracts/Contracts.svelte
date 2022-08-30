@@ -4,7 +4,7 @@
   import { StatusBar } from "../../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
+  import { faEdit } from "@fortawesome/free-solid-svg-icons";
   import { AppLauncher } from "@capacitor/app-launcher";
   import { Clipboard } from "@capacitor/clipboard";
   import Routes from "../../stores/Routes";
@@ -43,7 +43,7 @@
   ><Fa icon={faEdit} /> <span>Cadastrar novo Contracte</span></Views.Button
 >
 <Views.Divider />
-<Views.LoadMore
+<Views.LoadMoreReusableList
   noItems="Não há contratos para exibir!"
   cache={Stores.Cache.Types.CONTRACTS}
   url="/admin/contracts"
@@ -70,7 +70,7 @@
     <div>
       Inscrição: {Utils.Strings.dateToDateString(item?.createdAt)}
     </div>
-  </article></Views.LoadMore
+  </article></Views.LoadMoreReusableList
 >
 
 <style>

@@ -41,7 +41,7 @@
 <Views.Button on:click={newApp} bottomPadding={$StatusBar.bottomPadding}
   ><Fa icon={faEdit} /> <span>Cadastrar novo Appe</span></Views.Button
 >
-<Views.LoadMore
+<Views.LoadMoreReusableList
   noItems="Não há apps para exibir!"
   cache={Stores.Cache.Types.APPS}
   url="/admin/apps"
@@ -62,7 +62,7 @@
       Criação: {Utils.Strings.dateToDateString(item?.createdAt)}
     </div>
   </article>
-</Views.LoadMore>
+</Views.LoadMoreReusableList>
 
 <style>
   article {

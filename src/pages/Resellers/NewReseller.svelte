@@ -39,7 +39,6 @@
       stat: null,
     },
   };
-  $: canProceed = Utils.Objects.validateFields(itemsValidation);
   let itemsValidation = {
     name: false,
     lastName: false,
@@ -55,17 +54,16 @@
       stat: false,
     },
   };
-
   let currentPostalCode = null;
-  let errorAlert;
-  let showAlert = false;
 
+  $: canProceed = Utils.Objects.validateFields(itemsValidation);
   $: if (
     (items?.address?.postalCode?.length ?? 0) === 8 &&
     items?.address?.postalCode != currentPostalCode
   ) {
     findAddress();
   }
+
   function findAddress() {
     Stores.Loading.instance.start();
     currentPostalCode = items?.address?.postalCode;

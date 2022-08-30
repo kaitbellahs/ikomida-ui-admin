@@ -73,7 +73,7 @@
 <Views.Button on:click={newPlan} bottomPadding={$StatusBar.bottomPadding}
   ><Fa icon={faEdit} /> <span>Novo plano</span></Views.Button
 >
-<Views.LoadMore
+<Views.LoadMoreReusableList
   noItems="Não há planos para exibir!"
   cache={Stores.Cache.Types.PLANS}
   url="/admin/plans"
@@ -89,7 +89,7 @@
       on:check={(event) => onActivateClick(item.id, event)}
     /> -->
   </article>
-</Views.LoadMore>
+</Views.LoadMoreReusableList>
 
 <style>
   article {

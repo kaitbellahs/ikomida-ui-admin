@@ -71,7 +71,7 @@
   ><Fa icon={faEdit} /> <span>Novo termo</span></Views.Button
 >
 <Views.Divider />
-<Views.LoadMore
+<Views.LoadMoreReusableList
   noItems="Não há termos para exibir!"
   cache={Stores.Cache.Types.TERMS}
   url="/admin/terms"
@@ -87,7 +87,7 @@
       bind:checked={item.active}
       on:check={(event) => onActivateClick(item.id, event)}
     /> -->
-  </article></Views.LoadMore
+  </article></Views.LoadMoreReusableList
 >
 
 <style>

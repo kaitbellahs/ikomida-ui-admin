@@ -8,8 +8,6 @@
   let password;
   let validPhone = false;
   let validPassword = false;
-  let errorAlert;
-  let showAlert = false;
 
   $: canLogin = validPhone && validPassword;
 
@@ -19,7 +17,7 @@
     if (response?.success) {
       const token = await Utils.Jws.extractToken(response?.data);
       if (token !== null) {
-        Stores.Auth.instance.setToken(response?.data);
+        await Stores.Auth.instance.setToken(response?.data);
       } else {
         Stores.MessageAlert.instance.show("Token não é valido");
       }
@@ -28,6 +26,7 @@
     }
     Stores.Loading.instance.stop();
   }
+
   onMount(() => {
     Stores.Loading.instance.stop();
   });

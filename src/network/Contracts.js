@@ -3,10 +3,6 @@ import {
     Stores
 } from "@ikomida/components";
 
-export async function getContracts(refresh = false) {
-    return await Network.instance.loadMore(Stores.Cache.Types.CONTRACTS, '/admin/contracts', true, refresh)
-}
-
 export async function getContract(id) {
     return Network.instance.get(`/admin/contract/${id}`, true);
 }

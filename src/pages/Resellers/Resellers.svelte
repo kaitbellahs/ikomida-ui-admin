@@ -5,7 +5,7 @@
   import { StatusBar } from "../../stores/Setup";
   import { onMount } from "svelte";
   import Fa from "svelte-fa";
-  import { faEdit, faSync } from "@fortawesome/free-solid-svg-icons";
+  import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
   onMount(async () => {
     Stores.Loading.instance.stop();
@@ -21,7 +21,7 @@
   ><Fa icon={faEdit} /> <span>Novo vendedor</span></Views.Button
 >
 <Views.Divider />
-<Views.LoadMore
+<Views.LoadMoreReusableList
   noItems="Não há revendedores cadastrados para exibir!"
   cache={Stores.Cache.Types.RESELLERS}
   url="/resellers"
@@ -32,7 +32,7 @@
     <div>Telefone: {Utils.Strings.formatAsPhone(item.phone)}</div>
     <div>Grau: {item.degree}</div>
   </article>
-</Views.LoadMore>
+</Views.LoadMoreReusableList>
 
 <style>
   article {
