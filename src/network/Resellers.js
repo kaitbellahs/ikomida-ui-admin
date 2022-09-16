@@ -3,7 +3,7 @@ import {
 } from "@ikomida/components";
 
 export async function getResellers(timestamp = 0) {
-    const response = await Network.instance.get(`/resellers/${timestamp}`, true);
+    const response = await Network.instance?.get(`/resellers/${timestamp}`, true);
     if (response && response?.success) {
         return response?.data ?? [];
     }
@@ -11,7 +11,7 @@ export async function getResellers(timestamp = 0) {
 }
 
 export async function getRestaurants(timestamp = 0) {
-    const response = await Network.instance.get(`/restaurants/${timestamp}`, true);
+    const response = await Network.instance?.get(`/restaurants/${timestamp}`, true);
     if (response && response?.success) {
         return response?.data ?? [];
     }
@@ -19,9 +19,9 @@ export async function getRestaurants(timestamp = 0) {
 }
 
 export async function newReseller(object) {
-    return Network.instance.post("/reseller", true, object, "newReseller");
+    return Network.instance?.post("/reseller", true, object, "newReseller");
 }
 
 export async function GetAddressByCep(cep) {
-    return Network.instance.get(`/cep/${cep}`, true);
+    return Network.instance?.get(`/cep/${cep}`, true);
 }

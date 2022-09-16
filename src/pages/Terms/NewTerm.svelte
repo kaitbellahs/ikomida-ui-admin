@@ -12,7 +12,7 @@
   let oldSelectedTermType = null;
 
   onMount(() => {
-    selectedTermType = Types.TermTypes.list.filter(
+    selectedTermType = Types.TTerm.list.filter(
       (option) => option.id == item?.type
     )?.[0];
     oldSelectedTermType = selectedTermType;
@@ -68,7 +68,7 @@
   <Views.Selector
     bind:selected={selectedTermType}
     name="selecione uma opção"
-    options={Types.TermTypes.list}
+    options={Types.TTerm.list}
   />
   <Views.TextEdit
     type="text"

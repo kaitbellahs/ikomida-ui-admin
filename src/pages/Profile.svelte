@@ -23,7 +23,7 @@
   }
 
   onMount(async () => {
-    auth = await Stores.Auth.instance.store();
+    auth = await Stores.Auth.Auth.instance.store();
     userInfo = await Utils.Jws.extractToken($auth);
     Stores.Loading.instance.stop();
   });

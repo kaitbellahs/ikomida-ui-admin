@@ -17,7 +17,7 @@
     if (response?.success) {
       const token = await Utils.Jws.extractToken(response?.data);
       if (token !== null) {
-        await Stores.Auth.instance.setToken(response?.data);
+        await Stores.Auth.Auth.instance.setToken(response?.data);
       } else {
         Stores.MessageAlert.instance.show("Token não é valido");
       }

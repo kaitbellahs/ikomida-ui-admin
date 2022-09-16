@@ -80,7 +80,7 @@
   <article>
     <Views.FloatEdit callback={() => editTerm(item)} top="45" />
     <h2>{item.name}</h2>
-    <div>Tipo: {new Types.TermTypes(item.type).description}</div>
+    <div>Tipo: {new Types.TTerm(item.type).description}</div>
 
     <!-- <Views.Switch
       name="Ativo:"

@@ -58,7 +58,9 @@
   // };
 
   onMount(async () => {
-    userInfo = await Utils.Jws.extractToken(await Stores.Auth.instance.data());
+    userInfo = await Utils.Jws.extractToken(
+      await Stores.Auth.Auth.instance.data()
+    );
     appStoreStatusSelected = oldAppStoreStatusSelected =
       new AppStoreStatus().list?.filter(
         (type) => type.id === item?.storeStatus

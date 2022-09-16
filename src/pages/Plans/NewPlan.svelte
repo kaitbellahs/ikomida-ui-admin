@@ -42,7 +42,7 @@
     Stores.Loading.instance.stop();
   };
   onMount(() => {
-    selectedDiscountType = Types.DiscountTypes.list.filter(
+    selectedDiscountType = Types.TDiscount.list.filter(
       (type) => type.id === item.discountType
     )?.[0];
     Stores.Loading.instance.stop();
@@ -73,17 +73,17 @@
   <Views.Selector
     bind:selected={selectedDiscountType}
     name="selecione uma opção"
-    options={Types.DiscountTypes.list}
+    options={Types.TDiscount.list}
   />
   {#if selectedDiscountType}
-    {#if selectedDiscountType.id === Types.DiscountTypes.PERCENT}
+    {#if selectedDiscountType.id === Types.TDiscount.PERCENT}
       <Views.TextEdit
         type="percent"
         placeHolder="Valor"
         bind:value={item.discount}
         initialValue={item.discount}
       />
-    {:else if selectedDiscountType.id === Types.DiscountTypes.VALUE}
+    {:else if selectedDiscountType.id === Types.TDiscount.VALUE}
       <Views.TextEdit
         placeHolder="Valor"
         bind:value={item.discount}

@@ -89,7 +89,7 @@
   pages.forEach((page) => Stores.MenuHamburger.instance.addItem(page));
 
   onMount(async () => {
-    auth = await Stores.Auth.instance.store();
+    auth = await Stores.Auth.Auth.instance.store();
     if (Capacitor.isNativePlatform()) {
       _StatusBar.setStatusBar(await StatusBar.getInfo());
     }

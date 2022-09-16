@@ -45,7 +45,9 @@
   };
 
   onMount(async () => {
-    userInfo = await Utils.Jws.extractToken(await Stores.Auth.instance.data());
+    userInfo = await Utils.Jws.extractToken(
+      await Stores.Auth.Auth.instance.data()
+    );
     Stores.Loading.instance.stop();
   });
   $: Stores.Title.instance.set(item?.contractName ?? "Contrato");
@@ -72,13 +74,13 @@
         </div>
         {#if !app?.managedBy?.id}
           <Views.Button
-            multiplier="0.8"
+            multiplier={0.8}
             on:click={associateToMe(item?.id, app?.id)}
             >Associar comigo</Views.Button
           >
         {:else if app?.managedBy?.id === userInfo?.id}
           <Views.Button
-            multiplier="0.8"
+            multiplier={0.8}
             on:click={unAssociateWithMe(item?.id, app?.id)}
             >Desassociar comigo</Views.Button
           >

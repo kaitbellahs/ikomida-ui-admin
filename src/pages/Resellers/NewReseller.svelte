@@ -114,8 +114,8 @@
     bind:this={itemsInputs.name}
     bind:isValid={itemsValidation.name}
     type="name"
-    min="2"
-    max="255"
+    min={2}
+    max={255}
   />
   <Views.TextEdit
     placeHolder="Sobre nome"
@@ -123,8 +123,8 @@
     bind:this={itemsInputs.lastName}
     bind:isValid={itemsValidation.lastName}
     type="name"
-    min="2"
-    max="255"
+    min={2}
+    max={255}
   />
   <Views.TextEdit
     placeHolder="Email"
@@ -163,16 +163,16 @@
     bind:value={items.address.street}
     bind:this={itemsInputs.address.street}
     bind:isValid={itemsValidation.address.street}
-    min="2"
-    max="255"
+    min={2}
+    max={255}
   />
   <Views.TextEdit
     placeHolder="Número"
     bind:value={items.address.number}
     bind:this={itemsInputs.address.number}
     bind:isValid={itemsValidation.address.number}
-    min="1"
-    max="255"
+    min={1}
+    max={255}
     empty={!itemsValidation.address.postalCode}
   />
   <Views.TextEdit
@@ -185,24 +185,24 @@
     bind:value={items.address.neighborhood}
     bind:isValid={itemsValidation.address.neighborhood}
     bind:this={itemsInputs.address.neighborhood}
-    min="2"
-    max="255"
+    min={2}
+    max={255}
   />
   <Views.TextEdit
     placeHolder="Cidade"
     bind:value={items.address.city}
     bind:isValid={itemsValidation.address.city}
     bind:this={itemsInputs.address.city}
-    min="2"
-    max="255"
+    min={2}
+    max={255}
   />
   <Views.TextEdit
     placeHolder="UF"
     bind:value={items.address.stat}
     bind:this={itemsInputs.address.stat}
     bind:isValid={itemsValidation.address.stat}
-    min="2"
-    max="2"
+    min={2}
+    max={2}
   />
   <Views.Divider />
   <small
