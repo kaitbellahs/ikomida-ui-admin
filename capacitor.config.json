@@ -1,11 +1,11 @@
 {
   "appId": "com.ikomida.br.admin",
-  "appName": "iKomida",
+  "appName": "iKomida Admin",
   "webDir": "App",
   "bundledWebRuntime": false,
-  "loggingBehavior": "none",
+  "loggingBehavior": "debug",
   "npmClient": "yarn",
-  "overrideUserAgent": "iKomida",
+  "overrideUserAgent": "iKomida/Admin",
   "plugins": {
     "PushNotifications": {
       "presentationOptions": [

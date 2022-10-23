@@ -1,16 +1,17 @@
-<script>
-  import { status } from "../../network/Apps";
-  import { StatusBar } from "../../stores/Setup";
-  import { Views, Utils, Stores } from "@ikomida/components";
-  import { onMount } from "svelte";
-  import AppStoreStatus from "../../types/AppStoreStatus";
-  import AppStorePublishStatus from "../../types/AppStorePublishStatus";
+<script lang="ts">
+  import { status } from '../../network/Apps'
+  import { StatusBar } from '../../stores/Setup'
+  import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
+  import { onMount } from 'svelte'
+  import AppStoreStatus from '../../types/AppStoreStatus'
+  import AppStorePublishStatus from '../../types/AppStorePublishStatus'
 
-  let router = Stores.Navigation.instance.router;
-  let oldAppStoreStatusSelected;
-  let appStoreStatusSelected;
-  let AppStorePublishStatusSelected;
-  $: item = $router.options;
+  let router = Stores.Navigation.instance.router
+  let oldAppStoreStatusSelected: AppStoreStatus
+  let appStoreStatusSelected: AppStoreStatus
+  let AppStorePublishStatusSelected
+  let item: Types.Classes.CApp = $router.options
+  let userInfo: Types.Classes.CUser
 
   // $: if (item) {
   //   appStoreStatusSelected = oldAppStoreStatusSelected =
@@ -19,29 +20,26 @@
   //     )?.[0];
   // }
 
-  $: if (
-    appStoreStatusSelected !== oldAppStoreStatusSelected &&
-    appStoreStatusSelected?.id
-  ) {
-    updateStoreStatus(item?.id, appStoreStatusSelected?.id);
+  $: if (appStoreStatusSelected !== oldAppStoreStatusSelected && appStoreStatusSelected?.id) {
+    updateStoreStatus(item?.id, appStoreStatusSelected)
   }
   // $: if (AppStorePublishStatusSelected?.id) {
   //   updateStoreBuildStatus(item?.id, AppStorePublishStatusSelected?.id);
   // }Stores.MessageAlert.instance.show
 
-  const updateStoreStatus = async (id, storeStatus) => {
-    Stores.Loading.instance.start();
-    let object = {
-      storeStatus,
-    };
-    let response;
-    response = await status(id, object);
+  const updateStoreStatus = async (id?: string, storeStatus?: AppStoreStatus) => {
+    Stores.Loading.instance.start()
+    let object: Types.Classes.CApp = Types.Classes.CApp.fromObject({
+      storeStatus
+    })
+    let response
+    response = await status(id, object)
     if (response?.success) {
     } else {
-      Stores.MessageAlert.instance.show(response?.data);
+      Stores.MessageAlert.instance.show(response?.data)
     }
-    Stores.Loading.instance.stop();
-  };
+    Stores.Loading.instance.stop()
+  }
 
   // const updateStoreBuildStatus = async (id, storeStatus) => {
   //   Stores.Loading.instance.start()
@@ -58,20 +56,17 @@
   // };
 
   onMount(async () => {
-    userInfo = await Utils.Jws.extractToken(
-      await Stores.Auth.Auth.instance.data()
-    );
-    appStoreStatusSelected = oldAppStoreStatusSelected =
-      new AppStoreStatus().list?.filter(
-        (type) => type.id === item?.storeStatus
-      )?.[0];
-    Stores.Loading.instance.stop();
-  });
-  $: Stores.Title.instance.set(item?.displayName ?? "App");
+    userInfo = await Utils.Jws.extractToken((await Stores.Auth.Auth.instance.data()) ?? '')
+    appStoreStatusSelected = oldAppStoreStatusSelected = AppStoreStatus.values().filter(
+      type => type.id === item.storeStatus
+    )?.[0]
+    Stores.Loading.instance.stop()
+  })
+  $: Stores.Title.instance.set(item?.displayName ?? 'App')
 </script>
 
 <article>
-  <h2>{item?.displayName ?? "-"}</h2>
+  <h2>{item?.displayName ?? '-'}</h2>
   <!-- <Views.Selector
     name="Atualizar situação do build da loja"
     bind:selected={AppStorePublishStatusSelected}
@@ -82,36 +77,36 @@
     <div>Situação:</div>
     <div>
       <Views.Selector
-        marginTop="0"
+        marginTop={0}
         name="Atualizar situação da loja"
         bind:selected={appStoreStatusSelected}
-        options={new AppStoreStatus().list}
+        options={AppStoreStatus.values()}
       />
     </div>
   </div>
-  <div>fireBase Id: <b>{item?.fireBaseId ?? "-"}</b></div>
-  <div>iOS Profile Id: <b>{item?.iOSProfileId ?? "-"}</b></div>
-  <div>Versão: <b>{item?.version ?? "-"}</b></div>
-  <div>Versão da loja: <b>{item?.storeVersion ?? "-"}</b></div>
+  <div>fireBase Id: <b>{item?.fireBaseId ?? '-'}</b></div>
+  <div>iOS Profile Id: <b>{item?.iOSProfileId ?? '-'}</b></div>
+  <div>Versão: <b>{item?.version ?? '-'}</b></div>
+  <div>Versão da loja: <b>{item?.storeVersion ?? '-'}</b></div>
   <div>
-    Plataforma: <b>{item?.platform ?? "-"} </b>
+    Plataforma: <b>{item?.platform ?? '-'} </b>
   </div>
   <div>
-    Situação do Build da loja:: <b
-      >{new AppStorePublishStatus(item?.storeBuildStatus).name}
+    Situação do Build da loja: <b
+      >{item.storeBuildStatus ? AppStorePublishStatus.valueOf(item.storeBuildStatus)?.name : '-'}
     </b>
   </div>
   <div>
-    Evidencias: <b>{item?.storeEvidences ?? "-"} </b>
+    Evidencias: <b>{item?.storeEvidences ?? '-'} </b>
   </div>
   <div>
-    Nota: <b>{item?.storeNote ?? "-"} </b>
+    Nota: <b>{item?.storeNote ?? '-'} </b>
   </div>
   <div>
-    Situação da publicação: <b>{item?.storePublishStatus ?? "-"} </b>
+    Situação da publicação: <b>{item?.storePublishStatus ?? '-'} </b>
   </div>
   <div>
-    Ativo: <b>{item?.active ?? "-"} </b>
+    Ativo: <b>{item?.active ?? '-'} </b>
   </div>
   <div>
     Criação: <b>{Utils.Strings.dateToDateString(item.createdAt)} </b>

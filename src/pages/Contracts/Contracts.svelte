@@ -1,42 +1,44 @@
-<script>
-  import { getContract } from "../../network/Contracts";
-  import { Views, Utils, Stores } from "@ikomida/components";
-  import { StatusBar } from "../../stores/Setup";
-  import { onMount } from "svelte";
-  import Fa from "svelte-fa";
-  import { faEdit } from "@fortawesome/free-solid-svg-icons";
-  import { AppLauncher } from "@capacitor/app-launcher";
-  import { Clipboard } from "@capacitor/clipboard";
-  import Routes from "../../stores/Routes";
-  import AppStoreStatus from "../../types/AppStoreStatus";
+<script lang="ts">
+  import { getContract } from '../../network/Contracts'
+  import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
+  import { StatusBar } from '../../stores/Setup'
+  import { onMount } from 'svelte'
+  import Fa from 'svelte-fa'
+  import { faEdit } from '@fortawesome/free-solid-svg-icons'
+  import { AppLauncher } from '@capacitor/app-launcher'
+  import { Clipboard } from '@capacitor/clipboard'
+  import Routes from '../../stores/Routes'
+  import AppStoreStatus from '../../types/AppStoreStatus'
+
+  let items: Types.Classes.CContract[]
 
   onMount(async () => {
-    Stores.Loading.instance.stop();
-  });
+    Stores.Loading.instance.stop()
+  })
 
   async function newContract() {
-    const url = "https://ikomida.com";
-    const { value } = await AppLauncher.canOpenUrl({ url });
+    const url = 'https://ikomida.com'
+    const { value } = await AppLauncher.canOpenUrl({ url })
     if (value) {
-      await AppLauncher.openUrl({ url });
+      await AppLauncher.openUrl({ url })
     } else {
-      await Clipboard.write({ string: url });
+      await Clipboard.write({ string: url })
       Stores.MessageAlert.instance.show(
         `Não foi possível abrir navigador externo: por favor abrir o seu navigaro e digitar esa URL: ${url}, também foi copiado para sua área de transferência!`
-      );
+      )
     }
   }
 
-  async function openContract(id) {
-    const response = await getContract(id);
+  async function openContract(id?: string) {
+    const response = await getContract(id)
     if (response?.success) {
-      Stores.Navigation.instance.goTo(Routes.contract, response?.data);
+      Stores.Navigation.instance.goTo(Routes.contract, response?.data)
     } else {
-      Stores.MessageAlert.instance.show(response?.data);
+      Stores.MessageAlert.instance.show(response?.data)
     }
   }
 
-  Stores.Title.instance.set("Lista de contratos");
+  Stores.Title.instance.set('Lista de contratos')
 </script>
 
 <Views.Button on:click={newContract} bottomPadding={$StatusBar.bottomPadding}
@@ -47,28 +49,33 @@
   noItems="Não há contratos para exibir!"
   cache={Stores.Cache.Types.CONTRACTS}
   url="/admin/contracts"
-  let:item
+  bind:items
+  let:index
 >
-  <article on:click={openContract(item?.id)}>
-    <h2>{item?.contractName ?? "-"}</h2>
-    <div>ikomidaID: {item?.ikomidaID}</div>
-    <div>Plano: {item?.plan?.name}</div>
-    <div>Situação: {item?.status}</div>
+  <article on:click={async () => await openContract(items[index].id)}>
+    <h2>{items[index].contractName ?? '-'}</h2>
+    <div>ikomidaID: {items[index].ikomidaID}</div>
+    <div>Plano: {items[index].plan?.name}</div>
+    <div>Situação: {items[index].status}</div>
     <div class="apps">
-      {#each item?.apps as app}
-        <div>
+      {#if items[index].apps}
+        {#each items[index].apps ?? [] as app}
           <div>
-            Plataforma: {app?.platform ?? "-"}
+            <div>
+              Plataforma: {app?.platform ?? '-'}
+            </div>
+            <div>
+              Responsável: {app?.managedBy?.name ?? 'não associado'}
+            </div>
+            <div>Situação: {app.storeStatus ? AppStoreStatus.valueOf(app.storeStatus)?.name : '-'}</div>
           </div>
-          <div>
-            Responsável: {app?.managedBy?.name ?? "não associado"}
-          </div>
-          <div>Situação: {new AppStoreStatus(app?.storeStatus).name}</div>
-        </div>
-      {/each}
+        {/each}
+      {:else}
+        <Views.CentredMessage text="NNão há apps para exibir." />
+      {/if}
     </div>
     <div>
-      Inscrição: {Utils.Strings.dateToDateString(item?.createdAt)}
+      Inscrição: {Utils.Strings.dateToDateString(items[index].createdAt)}
     </div>
   </article></Views.LoadMoreReusableList
 >

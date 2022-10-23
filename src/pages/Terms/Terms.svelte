@@ -1,16 +1,17 @@
-<script>
-  import Routes from "../../stores/Routes";
-  import { removeTerm, activateTerm } from "../../network/Terms";
-  import { Views, Types, Stores } from "@ikomida/components";
+<script lang="ts">
+  import Routes from '../../stores/Routes'
+  import { removeTerm, activateTerm } from '../../network/Terms'
+  import { Views, Types, Stores } from '@ikomida/shared-frontend'
 
-  import { StatusBar } from "../../stores/Setup";
-  import { onMount } from "svelte";
-  import Fa from "svelte-fa";
-  import { faEdit } from "@fortawesome/free-solid-svg-icons";
+  import { StatusBar } from '../../stores/Setup'
+  import { onMount } from 'svelte'
+  import Fa from 'svelte-fa'
+  import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
+  let items: Types.Classes.CTerm[]
   onMount(async () => {
-    Stores.Loading.instance.stop();
-  });
+    Stores.Loading.instance.stop()
+  })
 
   async function newTerm() {
     Stores.Navigation.instance.goTo(Routes.newTerm, {
@@ -19,52 +20,54 @@
         name: null,
         text: null,
         type: null,
-        active: null,
+        active: null
       },
-      edit: false,
-    });
+      edit: false
+    })
   }
-  async function editTerm(item) {
+  async function editTerm(item?: Types.Classes.CTerm) {
     Stores.Navigation.instance.goTo(Routes.newTerm, {
       item,
-      edit: true,
-    });
+      edit: true
+    })
   }
-  async function onRemoveClick(id) {
-    Stores.Loading.instance.start();
-    let response = await removeTerm(id);
+  async function onRemoveClick(id?: string) {
+    Stores.Loading.instance.start()
+    let response = await removeTerm(id)
     if (response.success) {
-      terms = await getTerms();
+      Stores.LoadMore.instance.refresh()
     } else {
-      Stores.MessageAlert.instance.show(response?.data);
-      Stores.Loading.instance.stop();
-      return;
+      Stores.MessageAlert.instance.show(response?.data)
+      Stores.Loading.instance.stop()
+      return
     }
-    Stores.Loading.instance.stop();
+    Stores.Loading.instance.stop()
   }
-  async function onActivateClick(id, event) {
-    const checked = event.detail?.checked;
+  async function onActivateClick(id?: string, event?: any) {
+    const checked = event.detail?.checked
 
-    Stores.Loading.instance.start();
-    let response = await activateTerm({
-      id,
-      active: !checked,
-    });
+    Stores.Loading.instance.start()
+    let response = await activateTerm(
+      Types.Classes.CTerm.fromObject({
+        id,
+        active: !checked
+      })
+    )
     if (response && response?.success) {
-      terms = await getTerms();
+      Stores.LoadMore.instance.refresh()
     } else {
-      Stores.Loading.instance.stop();
-      Stores.MessageAlert.instance.show(response?.data);
-      terms = terms.map((term) => {
+      Stores.Loading.instance.stop()
+      Stores.MessageAlert.instance.show(response?.data)
+      items = items.map(term => {
         if (term?.id === id) {
-          term.active = !checked;
+          term.active = !checked
         }
-        return term;
-      });
+        return term
+      })
     }
-    Stores.Loading.instance.stop();
+    Stores.Loading.instance.stop()
   }
-  Stores.Title.instance.set("Configurções");
+  Stores.Title.instance.set('Configurções')
 </script>
 
 <Views.Button on:click={newTerm} bottomPadding={$StatusBar.bottomPadding}
@@ -75,18 +78,19 @@
   noItems="Não há termos para exibir!"
   cache={Stores.Cache.Types.TERMS}
   url="/admin/terms"
-  let:item
+  bind:items
+  let:index
 >
   <article>
-    <Views.FloatEdit callback={() => editTerm(item)} top="45" />
-    <h2>{item.name}</h2>
-    <div>Tipo: {new Types.TTerm(item.type).description}</div>
+    <Views.FloatEdit callback={() => editTerm(items[index])} top={45} />
+    <h2>{items[index].name}</h2>
+    <div>Tipo: {items[index].type.description}</div>
 
-    <!-- <Views.Switch
+    <Views.Switch
       name="Ativo:"
-      bind:checked={item.active}
-      on:check={(event) => onActivateClick(item.id, event)}
-    /> -->
+      bind:checked={items[index].active}
+      on:check={async event => await onActivateClick(items[index].id, event)}
+    />
   </article></Views.LoadMoreReusableList
 >
 

@@ -2,9 +2,6 @@ import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
-import {
-	terser
-} from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
 import cssModules from 'svelte-preprocess-cssmodules';
 import sveltePreprocess from 'svelte-preprocess';
@@ -12,7 +9,12 @@ import {
 	asMarkupPreprocessor
 } from 'svelte-as-markup-preprocessor';
 import replace from "@rollup/plugin-replace";
-
+import typescript from '@rollup/plugin-typescript';
+import json from '@rollup/plugin-json';
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+const tsconfig = require('./tsconfig.json')
+delete tsconfig.extends
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -23,9 +25,9 @@ function serve() {
 	}
 
 	return {
-		writeBundle() {
+		async writeBundle() {
 			if (server) return;
-			server = require('child_process').spawn('yarn', ['start', '--', '--dev'], {
+			server = (await import('child_process')).spawn('yarn', ['start', '--', '--dev'], {
 				stdio: ['ignore', 'inherit', 'inherit'],
 				shell: true
 			});
@@ -35,32 +37,47 @@ function serve() {
 		}
 	};
 }
-
 export default {
-	input: 'src/main.js',
+	onwarn(warning, warn) {
+		if (warning.code === 'CIRCULAR_DEPENDENCY') {
+			if (warning.message.includes('\\luxon\\')) {
+				return;
+			}
+		}
+		// if (warning.code === 'THIS_IS_UNDEFINED') { return; }
+		warn(warning);
+	},
+	input: 'src/main.ts',
+	strictDeprecations: true,
 	output: {
 		inlineDynamicImports: true,
 		sourcemap: !production,
 		format: 'iife',
+		generatedCode: 'es2015',
+		compact: true,
+		validate: true,
+		generatedCode: { constBindings: true },
 		name: 'app',
-		file: 'public/build/bundle.js',
+		file: 'App/build/bundle.js'
 	},
 	plugins: [
-        replace({
-            isProduction: process.env.ENV === 'prod',
-        }),
+		replace({
+			preventAssignment: true,
+			'ENVIRONMENT': process.env.ENV ?? 'development',
+		}),
 		svelte({
 			preprocess: [
 				asMarkupPreprocessor([
-					sveltePreprocess()
+					sveltePreprocess({ sourceMap: !production })
 				]),
-				cssModules()
+				cssModules(),
 			],
 			compilerOptions: {
 				// enable run-time checks when not in production
 				dev: !production
 			}
 		}),
+		json(),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({
@@ -77,6 +94,11 @@ export default {
 			exportConditions: ['browser'],
 			dedupe: ['svelte']
 		}),
+		typescript({
+			...tsconfig,
+			sourceMap: !production,
+			inlineSources: !production
+		}),
 		commonjs(),
 
 		// In dev mode, call `npm run start` once
@@ -85,11 +107,7 @@ export default {
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
-
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
-		production && terser()
+		!production && livereload('App')
 	],
 	watch: {
 		clearScreen: false

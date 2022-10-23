@@ -1,21 +1,19 @@
-<script>
-  import Routes from "../../stores/Routes";
-  import {
-    getSettings,
-    removeSetting,
-    activateSetting,
-  } from "../../network/Settings";
-  import { Views, Stores } from "@ikomida/components";
+<script lang="ts">
+  import Routes from '../../stores/Routes'
+  import { getSettings, removeSetting, activateSetting } from '../../network/Settings'
+  import { Views, Stores, Types } from '@ikomida/shared-frontend'
 
-  import { StatusBar } from "../../stores/Setup";
-  import SettingTypes from "../../types/SettingTypes";
-  import { onMount } from "svelte";
-  import Fa from "svelte-fa";
-  import { faEdit } from "@fortawesome/free-solid-svg-icons";
+  import { StatusBar } from '../../stores/Setup'
+  import SettingTypes from '../../types/SettingTypes'
+  import { onMount } from 'svelte'
+  import Fa from 'svelte-fa'
+  import { faEdit } from '@fortawesome/free-solid-svg-icons'
+
+  let items: Types.Classes.CSetting[]
 
   onMount(async () => {
-    Stores.Loading.instance.stop();
-  });
+    Stores.Loading.instance.stop()
+  })
 
   async function newSetting() {
     Stores.Navigation.instance.goTo(Routes.newSetting, {
@@ -23,53 +21,55 @@
         id: null,
         name: null,
         value: null,
-        type: null,
+        type: null
       },
-      edit: false,
-    });
+      edit: false
+    })
   }
-  async function editSetting(item) {
+  async function editSetting(item?: Types.Classes.CSetting) {
     Stores.Navigation.instance.goTo(Routes.newSetting, {
       item,
-      edit: true,
-    });
+      edit: true
+    })
   }
-  async function onRemoveClick(id) {
-    Stores.Loading.instance.start();
-    let response = await removeSetting(id);
+  async function onRemoveClick(id?: string) {
+    Stores.Loading.instance.start()
+    let response = await removeSetting(id)
     if (response.success) {
-      settings = await getSettings();
+      Stores.LoadMore.instance.refresh()
     } else {
-      Stores.MessageAlert.instance.show(response?.data);
-      Stores.Loading.instance.stop();
-      return;
+      Stores.MessageAlert.instance.show(response?.data)
+      Stores.Loading.instance.stop()
+      return
     }
-    Stores.Loading.instance.stop();
+    Stores.Loading.instance.stop()
   }
-  async function onActivateClick(id, event) {
-    const checked = event.detail?.checked;
+  async function onActivateClick(id?: string, event?: any) {
+    const checked = event.detail?.checked
 
-    Stores.Loading.instance.start();
-    let response = await activateSetting({
-      id,
-      active: !checked,
-    });
+    Stores.Loading.instance.start()
+    let response = await activateSetting(
+      Types.Classes.CSetting.fromObject({
+        id,
+        active: !checked
+      })
+    )
     if (response && response?.success) {
-      settings = await getSettings();
+      Stores.LoadMore.instance.refresh()
     } else {
-      Stores.Loading.instance.stop();
-      Stores.MessageAlert.instance.show(response?.data);
-      settings = settings.map((setting) => {
-        if (setting?.id === id) {
-          setting.active = !checked;
+      Stores.Loading.instance.stop()
+      Stores.MessageAlert.instance.show(response?.data)
+      items = items.map(item => {
+        if (item?.id === id) {
+          item.active = !checked
         }
-        return setting;
-      });
+        return item
+      })
     }
-    Stores.Loading.instance.stop();
+    Stores.Loading.instance.stop()
   }
 
-  Stores.Title.instance.set("Configurções");
+  Stores.Title.instance.set('Configurções')
 </script>
 
 <Views.Button on:click={newSetting} bottomPadding={$StatusBar.bottomPadding}
@@ -81,20 +81,21 @@
   noItems="Não há configurações para exibir!"
   cache={Stores.Cache.Types.SETTINGS}
   url="/admin/settings"
-  let:item
+  bind:items
+  let:index
 >
   <article>
-    <Views.FloatRemove callback={() => onRemoveClick(item.id)} />
-    <Views.FloatEdit callback={() => editSetting(item)} top="45" />
-    <h2>{item.name}</h2>
+    <Views.FloatRemove callback={() => onRemoveClick(items[index].id)} />
+    <Views.FloatEdit callback={() => editSetting(items[index])} top={45} />
+    <h2>{items[index].name}</h2>
     <div class="value">
-      value: {SettingTypes[item.type] === SettingTypes.BOOL
-        ? item.value === 0
-          ? "false"
-          : "true"
-        : item.value}
+      value: {items[index].type === Types.Types.TSetting.BOOL
+        ? items[index].value === '0'
+          ? 'false'
+          : 'true'
+        : items[index].value}
     </div>
-    <div>Tipo: {SettingTypes[item.type]}</div>
+    <div>Tipo: {items[index].type.name}</div>
 
     <!-- <Views.Switch
             name="Ativo:"

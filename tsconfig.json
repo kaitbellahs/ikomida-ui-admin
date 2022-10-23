@@ -1,0 +1,34 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.svelte"
+  ],
+  "exclude": [
+    "node_modules/*",
+    "**/*.spec.ts",
+    "App/**/*"
+  ],
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "module": "esnext",
+    "isolatedModules": false,
+    "noImplicitAny": true,
+    "strict": true,
+    "declaration": true,
+    "declarationDir": "lib",
+    "useDefineForClassFields": false,
+    "resolveJsonModule": true,
+    "target": "ES2021"
+  },
+  "plugins": [
+    {
+      "name": "typescript-svelte-plugin"
+    }
+  ]
+}

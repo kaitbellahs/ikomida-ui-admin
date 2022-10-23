@@ -1,41 +1,43 @@
-<script>
-  import { getApp } from "../../network/Apps";
-  import { Views, Utils, Stores } from "@ikomida/components";
-  import { StatusBar } from "../../stores/Setup";
-  import { onMount } from "svelte";
-  import Fa from "svelte-fa";
-  import { faEdit } from "@fortawesome/free-solid-svg-icons";
-  import { AppLauncher } from "@capacitor/app-launcher";
-  import { Clipboard } from "@capacitor/clipboard";
-  import Routes from "../../stores/Routes";
+<script lang="ts">
+  import { getApp } from '../../network/Apps'
+  import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
+  import { StatusBar } from '../../stores/Setup'
+  import { onMount } from 'svelte'
+  import Fa from 'svelte-fa'
+  import { faEdit } from '@fortawesome/free-solid-svg-icons'
+  import { AppLauncher } from '@capacitor/app-launcher'
+  import { Clipboard } from '@capacitor/clipboard'
+  import Routes from '../../stores/Routes'
+
+  let items: Types.Classes.CApp[]
 
   onMount(async () => {
-    Stores.Loading.instance.stop();
-  });
+    Stores.Loading.instance.stop()
+  })
 
   async function newApp() {
-    const url = "https://ikomida.com";
-    const { value } = await AppLauncher.canOpenUrl({ url });
+    const url = 'https://ikomida.com'
+    const { value } = await AppLauncher.canOpenUrl({ url })
     if (value) {
-      await AppLauncher.openUrl({ url });
+      await AppLauncher.openUrl({ url })
     } else {
-      await Clipboard.write({ string: url });
+      await Clipboard.write({ string: url })
       Stores.MessageAlert.instance.show(
         `Não foi possível abrir navigador externo: por favor abrir o seu navigaro e digitar esa URL: ${url}, também foi copiado para sua área de transferência!`
-      );
+      )
     }
   }
 
-  async function openApp(id) {
-    const response = await getApp(id);
+  async function openApp(id?: string) {
+    const response = await getApp(id)
     if (response?.success) {
-      Stores.Navigation.instance.goTo(Routes.app, response?.data);
+      Stores.Navigation.instance.goTo(Routes.app, response?.data)
     } else {
-      Stores.MessageAlert.instance.show(response?.data);
+      Stores.MessageAlert.instance.show(response?.data)
     }
   }
 
-  Stores.Title.instance.set("Lista de apps");
+  Stores.Title.instance.set('Lista de apps')
 </script>
 
 <Views.Button on:click={newApp} bottomPadding={$StatusBar.bottomPadding}
@@ -45,21 +47,22 @@
   noItems="Não há apps para exibir!"
   cache={Stores.Cache.Types.APPS}
   url="/admin/apps"
-  let:item
+  bind:items
+  let:index
 >
-  <article on:click={openApp(id)}>
-    <h2>{item?.displayName ?? "-"}</h2>
-    <div>bundleId: {item?.bundleId}</div>
-    <!-- <div>Situação: {new AppStoreStatus(item?.storeStatus).name}</div> -->
-    <div>Versão: {item?.version ?? "-"}</div>
+  <article on:click={async () => await openApp(items[index].id)}>
+    <h2>{items[index].displayName ?? '-'}</h2>
+    <div>bundleId: {items[index].bundleId}</div>
+    <!-- <div>Situação: {new AppStoreStatus(items[index].storeStatus).name}</div> -->
+    <div>Versão: {items[index].version ?? '-'}</div>
     <div>
-      Plataforma: {item?.platform ?? "-"}
+      Plataforma: {items[index].platform ?? '-'}
     </div>
     <div>
-      Ativo: {item?.active ?? "-"}
+      Ativo: {items[index].active ?? '-'}
     </div>
     <div>
-      Criação: {Utils.Strings.dateToDateString(item?.createdAt)}
+      Criação: {Utils.Strings.dateToDateString(items[index].createdAt)}
     </div>
   </article>
 </Views.LoadMoreReusableList>

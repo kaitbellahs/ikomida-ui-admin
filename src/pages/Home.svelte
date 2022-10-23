@@ -1,20 +1,20 @@
-<script>
+<script lang="ts">
   import {
     countResellers,
     countRestaurants,
     countProducts,
     countOrders,
     countUsers,
-    countCoupons,
-  } from "../network/Quantities";
-  import { Views, Stores } from "@ikomida/components";
-  import { onMount } from "svelte";
+    countCoupons
+  } from '../network/Quantities'
+  import { Views, Stores } from '@ikomida/shared-frontend'
+  import { onMount } from 'svelte'
 
   onMount(async () => {
-    Stores.Loading.instance.stop();
-  });
+    Stores.Loading.instance.stop()
+  })
 
-  Stores.Title.instance.set("Admin");
+  Stores.Title.instance.set('Admin')
 </script>
 
 <section>
