@@ -9,6 +9,10 @@
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
   let items: Types.Classes.CTerm[]
+
+  $: if (items) {
+    items = Types.Classes.CTerm.fromObject(items)
+  }
   onMount(async () => {
     Stores.Loading.instance.stop()
   })

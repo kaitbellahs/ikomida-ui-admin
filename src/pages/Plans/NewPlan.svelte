@@ -2,23 +2,13 @@
   import Fa from 'svelte-fa'
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../stores/Setup'
-  import { Views, Types, Stores } from '@ikomida/shared-frontend'
+  import { Views, Types, Stores, Network } from '@ikomida/shared-frontend'
   import { newPlan, editPlan } from '../../network/Plans'
   import { onMount } from 'svelte'
 
   const router = Stores.Navigation.instance.router
-  const { item, edit } = $router.options
-  let selectedDiscountType: Types.Types.TDiscount | undefined
-  let oldSelectedDiscountType: Types.Types.TDiscount | undefined = undefined
-  let discountTypeInput = null
-
-  $: if (
-    selectedDiscountType &&
-    (oldSelectedDiscountType === null || oldSelectedDiscountType?.id !== selectedDiscountType?.id)
-  ) {
-    item.discountType = selectedDiscountType?.id
-    oldSelectedDiscountType = selectedDiscountType
-  }
+  const item: Types.Classes.CPlan = $router.options.item
+  const edit = $router.options.edit
 
   const addDetail = () => {
     item?.details?.push({ key: null, value: null })
@@ -34,6 +24,7 @@
       response = await newPlan(item)
     }
     if (response.success) {
+      Network.instance?.clearCache(Stores.Cache.Types.PLANS)
       Stores.Navigation.instance.pop()
     } else {
       Stores.MessageAlert.instance.show(response?.data)
@@ -41,7 +32,6 @@
     Stores.Loading.instance.stop()
   }
   onMount(() => {
-    selectedDiscountType = Types.Types.TDiscount.values().filter(type => type.id === item.discountType)?.[0]
     Stores.Loading.instance.stop()
   })
   Stores.Title.instance.set(edit ? 'Editar plano' : 'Novo plano')
@@ -64,7 +54,7 @@
   />
   <Views.Switch name="Destacado" bind:checked={item.highlighted} />
   <Views.Selector
-    bind:selected={selectedDiscountType}
+    bind:selected={item.discountType}
     name="selecione uma opção"
     options={Types.Types.TDiscount.values()}
   />

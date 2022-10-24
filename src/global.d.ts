@@ -4,4 +4,5 @@ declare module '*.svelte' {
 }
 interface Window {
   environment: string
+  host: string
 }

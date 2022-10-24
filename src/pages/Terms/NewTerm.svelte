@@ -2,7 +2,7 @@
   import Fa from 'svelte-fa'
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../stores/Setup'
-  import { Views, Types, Stores } from '@ikomida/shared-frontend'
+  import { Views, Types, Stores, Network } from '@ikomida/shared-frontend'
   import { newTerm, editTerm } from '../../network/Terms'
   import { onMount } from 'svelte'
 
@@ -40,6 +40,7 @@
       response = await newTerm(item)
     }
     if (response.success) {
+      Network.instance?.clearCache(Stores.Cache.Types.TERMS)
       Stores.Navigation.instance.pop()
     } else {
       Stores.MessageAlert.instance.show(response?.data)

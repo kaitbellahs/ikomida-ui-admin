@@ -11,6 +11,10 @@
 
   let items: Types.Classes.CSetting[]
 
+  $: if (items) {
+    items = Types.Classes.CSetting.fromObject(items)
+  }
+
   onMount(async () => {
     Stores.Loading.instance.stop()
   })

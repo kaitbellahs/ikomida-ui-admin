@@ -11,6 +11,10 @@
 
   let items: Types.Classes.CApp[]
 
+  $: if (items) {
+    items = Types.Classes.CApp.fromObject(items)
+  }
+
   onMount(async () => {
     Stores.Loading.instance.stop()
   })

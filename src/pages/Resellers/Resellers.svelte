@@ -9,6 +9,10 @@
 
   let items: Types.Classes.CUser[]
 
+  $: if (items) {
+    items = Types.Classes.CUser.fromObject(items)
+  }
+
   onMount(async () => {
     Stores.Loading.instance.stop()
   })

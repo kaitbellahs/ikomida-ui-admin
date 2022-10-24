@@ -2,7 +2,7 @@
   import Fa from 'svelte-fa'
   import { faEdit, faSearch } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../stores/Setup'
-  import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
+  import { Views, Utils, Stores, Types, Network } from '@ikomida/shared-frontend'
   import { newReseller, GetAddressByCep } from '../../network/Resellers'
   import { onMount } from 'svelte'
 
@@ -106,6 +106,7 @@
     Stores.Loading.instance.start()
     let response = await newReseller(item)
     if (response.success) {
+      Network.instance?.clearCache(Stores.Cache.Types.RESELLERS)
       Stores.Navigation.instance.pop()
     } else {
       Stores.MessageAlert.instance.show(response?.data)

@@ -2,7 +2,7 @@
   import Fa from 'svelte-fa'
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../stores/Setup'
-  import { Views, Stores, Types } from '@ikomida/shared-frontend'
+  import { Views, Stores, Types, Network } from '@ikomida/shared-frontend'
   import { newSetting, editSetting } from '../../network/Settings'
   import SettingTypes from '../../types/SettingTypes'
   import { onMount } from 'svelte'
@@ -48,6 +48,7 @@
       response = await newSetting(item)
     }
     if (response.success) {
+      Network.instance?.clearCache(Stores.Cache.Types.SETTINGS)
       Stores.Navigation.instance.pop()
     } else {
       Stores.MessageAlert.instance.show(response?.data)

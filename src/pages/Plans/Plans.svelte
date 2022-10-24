@@ -2,13 +2,19 @@
   import Routes from '../../stores/Routes'
   import { removePlan, activatePlan } from '../../network/Plans'
   import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
-
+  import { AppLauncher } from '@capacitor/app-launcher'
+  import { Capacitor } from '@capacitor/core'
+  import { Clipboard } from '@capacitor/clipboard'
   import { StatusBar } from '../../stores/Setup'
   import { onMount } from 'svelte'
   import Fa from 'svelte-fa'
   import { faEdit, faSync } from '@fortawesome/free-solid-svg-icons'
 
   let items: Types.Classes.CPlan[]
+
+  $: if (items) {
+    items = Types.Classes.CPlan.fromObject(items)
+  }
 
   onMount(async () => {
     Stores.Loading.instance.stop()
@@ -59,6 +65,17 @@
     }
     Stores.Loading.instance.stop()
   }
+  async function openPlan(id?: string, name?: string, price?: number) {
+    const url = `https://${window.host}/plans/${id}/${name}/${price}`
+    const { value } = await AppLauncher.canOpenUrl({ url })
+    await AppLauncher.openUrl({ url })
+    if (!value) {
+      await Clipboard.write({ string: url })
+      Stores.MessageAlert.instance.show(
+        `Se o navigador externo nao abriu: abra o e digitar essa URL: ${url}, também foi copiado para sua área de transferência para colar-lo!`
+      )
+    }
+  }
   Stores.Title.instance.set('Planos')
 </script>
 
@@ -72,7 +89,7 @@
   bind:items
   let:index
 >
-  <article>
+  <article on:click|self={async () => await openPlan(items[index].id, items[index].name, items[index].price)}>
     <h2>{items[index].name}</h2>
     <div>price: {Utils.Strings.currency(items[index].price)}</div>
     <div>Data: {Utils.Strings.dateToDateString(items[index].createdAt)}</div>

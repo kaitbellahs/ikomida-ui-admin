@@ -1,4 +1,5 @@
 window.environment = 'ENVIRONMENT'
+window.host = 'ikomida.com'
 
 import App from './App.svelte'
 import { Network, Stores } from '@ikomida/shared-frontend'
@@ -7,6 +8,12 @@ import pkg from '../package.json' assert { type: "json" }
 
 const appVersion = pkg.version
 const agent = 'ADMIN'
+const host: any = {
+  production: 'ikomida.com',
+  development: 'dev.ikomida.com',
+  homologation: 'hmlg.ikomida.com'
+}
+window.host = host[window.environment]
 const url: any = {
   production: 'https://api.ikomida.com',
   development: 'https://dev.api.ikomida.com',

@@ -18,7 +18,7 @@ export async function editPlan(object: Types.Classes.CPlan) {
 }
 
 export async function activatePlan(object: Types.Classes.CPlan) {
-  return Network.instance?.put('/admin/activatePlan', true, object)
+  return Network.instance?.patch('/admin/plan', true, object)
 }
 
 export async function removePlan(id?: string) {
