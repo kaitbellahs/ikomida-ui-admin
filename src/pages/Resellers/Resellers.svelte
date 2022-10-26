@@ -9,7 +9,7 @@
 
   let items: Types.Classes.CUser[]
 
-  $: if (items) {
+  $: {
     items = Types.Classes.CUser.fromObject(items)
   }
 
@@ -32,12 +32,12 @@
   cache={Stores.Cache.Types.RESELLERS}
   url="/resellers"
   bind:items
-  let:item
+  let:index
 >
   <article>
-    <h2>{item.name} {item.lastName}</h2>
-    <div>Telefone: {Utils.Strings.formatAsPhone(item.phone)}</div>
-    <div>Code: {item.referralCode}</div>
+    <h2>{items[index].name} {items[index].lastName}</h2>
+    <div>Telefone: {Utils.Strings.formatAsPhone(items[index].phone)}</div>
+    <div>Code: {items[index].referralCode}</div>
   </article>
 </Views.LoadMoreReusableList>
 

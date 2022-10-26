@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">iKomida Admin</string>
+    <string name="title_activity_main">iKomida Admin</string>
+    <string name="package_name">com.ikomida.br.admin</string>
+    <string name="custom_url_scheme">ikomida</string>
+    <string name="filter_view">iKomida Admin</string>
+    <string name="url_scheme">com.ikomida.br.admin</string>
+    <string name="url_host">pagseguro.integration.callback</string>
+</resources>

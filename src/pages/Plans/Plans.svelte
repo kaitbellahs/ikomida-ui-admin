@@ -1,14 +1,13 @@
 <script lang="ts">
   import Routes from '../../stores/Routes'
-  import { removePlan, activatePlan } from '../../network/Plans'
+  import { activatePlan } from '../../network/Plans'
   import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
   import { AppLauncher } from '@capacitor/app-launcher'
-  import { Capacitor } from '@capacitor/core'
   import { Clipboard } from '@capacitor/clipboard'
   import { StatusBar } from '../../stores/Setup'
   import { onMount } from 'svelte'
   import Fa from 'svelte-fa'
-  import { faEdit, faSync } from '@fortawesome/free-solid-svg-icons'
+  import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
   let items: Types.Classes.CPlan[]
 
@@ -22,22 +21,15 @@
 
   async function newPlan() {
     Stores.Navigation.instance.goTo(Routes.newPlan, {
-      item: {
-        name: null,
-        price: null,
-        discount: null,
-        discountType: null,
-        details: [],
-        highlighted: false,
-        order: null,
-        staff: null,
-        products: null,
-        orders: null,
-        coupons: null,
-        billing: null,
-        support: []
-      },
+      item: Types.Classes.CPlan.fillWith(null),
       edit: false
+    })
+  }
+
+  async function editPlan(plan: Types.Classes.CPlan) {
+    Stores.Navigation.instance.goTo(Routes.newPlan, {
+      item: plan,
+      edit: true
     })
   }
 
@@ -90,6 +82,7 @@
   let:index
 >
   <article on:click|self={async () => await openPlan(items[index].id, items[index].name, items[index].price)}>
+    <Views.FloatEdit callback={async () => await editPlan(items[index])} />
     <h2>{items[index].name}</h2>
     <div>price: {Utils.Strings.currency(items[index].price)}</div>
     <div>Data: {Utils.Strings.dateToDateString(items[index].createdAt)}</div>

@@ -2,7 +2,7 @@
   import Fa from 'svelte-fa'
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../stores/Setup'
-  import { Views, Types, Stores, Network } from '@ikomida/shared-frontend'
+  import { Views, Types, Stores, Network, Utils } from '@ikomida/shared-frontend'
   import { newPlan, editPlan } from '../../network/Plans'
   import { onMount } from 'svelte'
 
@@ -11,7 +11,7 @@
   const edit = $router.options.edit
 
   const addDetail = () => {
-    item?.details?.push({ key: null, value: null })
+    item?.details?.push(Types.Classes.CKeyValue.fromObject({ key: undefined, value: undefined }))
     item.details = item?.details
   }
 
@@ -45,6 +45,12 @@
     bind:value={item.order}
     initialValue={item.order}
   />
+  <Views.TextEdit
+    placeHolder="Dias antes do vencimento."
+    type={Types.TTextEdit.NUMBER}
+    bind:value={item.dueDateAfterXDays}
+    initialValue={item.dueDateAfterXDays}
+  />
   <Views.TextEdit placeHolder="Nome" bind:value={item.name} initialValue={item.name} />
   <Views.TextEdit
     placeHolder="preço"
@@ -58,15 +64,15 @@
     name="selecione uma opção"
     options={Types.Types.TDiscount.values()}
   />
-  {#if selectedDiscountType}
-    {#if selectedDiscountType === Types.Types.TDiscount.PERCENT}
+  {#if item.discountType}
+    {#if item.discountType === Types.Types.TDiscount.PERCENT}
       <Views.TextEdit
         type={Types.TTextEdit.PERCENT}
         placeHolder="Valor"
         bind:value={item.discount}
         initialValue={item.discount}
       />
-    {:else if selectedDiscountType === Types.Types.TDiscount.VALUE}
+    {:else if item.discountType === Types.Types.TDiscount.VALUE}
       <Views.TextEdit
         placeHolder="Valor"
         bind:value={item.discount}
@@ -131,7 +137,7 @@
       </div>
     {/each}
   </div>
-  {#each item?.details as detail (detail.key)}
+  {#each item?.details ?? [] as detail (detail.key)}
     <div class="twoCells">
       <Views.TextEdit placeHolder="key" bind:value={detail.key} initialValue={detail.key} />
       <Views.TextEdit placeHolder="value" bind:value={detail.value} initialValue={detail.value} />

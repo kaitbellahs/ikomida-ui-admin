@@ -7,7 +7,7 @@
 </script>
 
 <main style="background: {$Layout.background};height: 100%;">
-  <Views.Image source="assets/icons/transparent-logo-1.svg" name="iKomida" />
+  <Views.Image source="assets/icons/transparent-logo-1.svg" name="iKomida Admin" />
   <h3>Carregando...</h3>
 </main>
 

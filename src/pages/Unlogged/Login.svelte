@@ -39,7 +39,7 @@
 
 <main>
   <div class="avatar">
-    <Views.Image source="/assets/Icons/transparent-logo-1.svg" name="iKomida" />
+    <Views.Image source="/assets/Icons/transparent-logo-1.svg" name="iKomida Admin" />
   </div>
   <h1>Login</h1>
   <small
