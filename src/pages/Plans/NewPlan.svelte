@@ -101,6 +101,12 @@
     initialValue={item.products}
   />
   <Views.TextEdit
+    placeHolder="Opcoes por produto"
+    type={Types.TTextEdit.NUMBER}
+    bind:value={item.productOptions}
+    initialValue={item.productOptions}
+  />
+  <Views.TextEdit
     placeHolder="Pedidos"
     type={Types.TTextEdit.NUMBER}
     bind:value={item.orders}
@@ -119,17 +125,18 @@
       <div class="support">
         <Views.Checkbox
           marginTop={0}
-          checked={item?.support?.includes(support?.id)}
+          checked={item?.support?.includes(support)}
           on:check={event => {
             if (!item?.support || item?.support === undefined) {
               item.support = []
             }
-            const index = item?.support?.indexOf(support?.id)
+            const index = item?.support?.indexOf(support)
+
             if ((index ?? -1) > -1) {
               item?.support?.splice(index, 1)
             }
             if (!event?.detail?.checked) {
-              item?.support?.push(support?.id)
+              item?.support?.push(support)
             }
           }}
           label={support.name}
@@ -140,7 +147,7 @@
   {#each item?.details ?? [] as detail (detail.key)}
     <div class="twoCells">
       <Views.TextEdit placeHolder="key" bind:value={detail.key} initialValue={detail.key} />
-      <Views.TextEdit placeHolder="value" bind:value={detail.value} initialValue={detail.value} />
+      <Views.TextEdit placeHolder="value" bind:value={detail.value} initialValue={detail.value ?? undefined} />
     </div>
   {/each}
   <Views.Divider />
