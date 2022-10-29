@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.ikomida.br.vendor",
+  "applicationId": "com.ikomida.br.admin",
   "variantName": "release",
   "elements": [
     {
