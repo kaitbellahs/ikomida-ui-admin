@@ -118,32 +118,7 @@
     bind:value={item.coupons}
     initialValue={item.coupons}
   />
-
-  <h3>Meios de suporte</h3>
-  <div class="supports">
-    {#each Types.Types.TSupport.values() as support (support?.id)}
-      <div class="support">
-        <Views.Checkbox
-          marginTop={0}
-          checked={item?.support?.includes(support)}
-          on:check={event => {
-            if (!item?.support || item?.support === undefined) {
-              item.support = []
-            }
-            const index = item?.support?.indexOf(support)
-
-            if ((index ?? -1) > -1) {
-              item?.support?.splice(index, 1)
-            }
-            if (!event?.detail?.checked) {
-              item?.support?.push(support)
-            }
-          }}
-          label={support.name}
-        />
-      </div>
-    {/each}
-  </div>
+  <Views.CheckBoxList title="Meios de suporte" bind:selected={item.support} options={Types.Types.TSupport.values()} />
   {#each item?.details ?? [] as detail (detail.key)}
     <div class="twoCells">
       <Views.TextEdit placeHolder="key" bind:value={detail.key} initialValue={detail.key} />
@@ -161,23 +136,5 @@
 <style>
   .twoCells {
     display: flex;
-  }
-  .plan > .supports {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .plan > .supports > .support {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 5px;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    flex-basis: 40%;
-    text-shadow: 0.5px 1px #18056b66;
-    box-shadow: 1px 1.5px #00000099;
   }
 </style>
