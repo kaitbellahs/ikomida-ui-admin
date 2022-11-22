@@ -23,9 +23,11 @@
   Stores.Title.instance.set('Lista de vendedores')
 </script>
 
-<Views.Button on:click={newReseller} bottomPadding={$StatusBar.bottomPadding}
-  ><Fa icon={faEdit} /> <span>Novo vendedor</span></Views.Button
->
+<div style="padding: 0 16pt;">
+  <Views.Button on:click={newReseller} bottomPadding={$StatusBar.bottomPadding}
+    ><Fa icon={faEdit} /> <span>Novo vendedor</span></Views.Button
+  >
+</div>
 <Views.Divider />
 <Views.LoadMoreReusableList
   noItems="Não há revendedores cadastrados para exibir!"
@@ -34,7 +36,7 @@
   bind:items
   let:index
 >
-  <article>
+  <article class="shadow">
     <h2>{items[index].name} {items[index].lastName}</h2>
     <div>Telefone: {Utils.Strings.formatAsPhone(items[index].phone)}</div>
     <div>Code: {items[index].referralCode}</div>
@@ -44,9 +46,7 @@
 <style>
   article {
     position: relative;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 10px;
+    border-radius: 8pt;
+    padding: 16pt;
   }
 </style>

@@ -45,9 +45,11 @@
   Stores.Title.instance.set('Lista de contratos')
 </script>
 
-<Views.Button on:click={newContract} bottomPadding={$StatusBar.bottomPadding}
-  ><Fa icon={faEdit} /> <span>Cadastrar novo Contracte</span></Views.Button
->
+<div style="padding: 0 16pt;">
+  <Views.Button on:click={newContract} bottomPadding={$StatusBar.bottomPadding}
+    ><Fa icon={faEdit} /> <span>Cadastrar novo Contracte</span></Views.Button
+  >
+</div>
 <Views.Divider />
 <Views.LoadMoreReusableList
   noItems="Não há contratos para exibir!"
@@ -56,7 +58,7 @@
   bind:items
   let:index
 >
-  <article on:click={async () => await openContract(items[index].id)}>
+  <article class="shadow" on:click={async () => await openContract(items[index].id)}>
     <h2>{items[index].contractName ?? '-'}</h2>
     <div>ikomidaID: {items[index].ikomidaID}</div>
     <div>Plano: {items[index].plan?.name}</div>
@@ -87,15 +89,13 @@
 <style>
   article {
     position: relative;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 10px;
+    border-radius: 8pt;
+    padding: 16pt;
   }
   article > .apps > div {
     background: #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 10px 0;
+    border-radius: 8pt;
+    padding: 16pt;
+    margin: 16pt 0;
   }
 </style>

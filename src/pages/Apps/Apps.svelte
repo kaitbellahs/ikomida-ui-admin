@@ -44,9 +44,11 @@
   Stores.Title.instance.set('Lista de apps')
 </script>
 
-<Views.Button on:click={newApp} bottomPadding={$StatusBar.bottomPadding}
-  ><Fa icon={faEdit} /> <span>Cadastrar novo Appe</span></Views.Button
->
+<div style="padding: 0 16pt;">
+  <Views.Button on:click={newApp} bottomPadding={$StatusBar.bottomPadding}
+    ><Fa icon={faEdit} /> <span>Cadastrar novo Appe</span></Views.Button
+  >
+</div>
 <Views.LoadMoreReusableList
   noItems="Não há apps para exibir!"
   cache={Stores.Cache.Types.APPS}
@@ -54,7 +56,7 @@
   bind:items
   let:index
 >
-  <article on:click={async () => await openApp(items[index].id)}>
+  <article class="shadow" on:click={async () => await openApp(items[index].id)}>
     <h2>{items[index].displayName ?? '-'}</h2>
     <div>bundleId: {items[index].bundleId}</div>
     <!-- <div>Situação: {new AppStoreStatus(items[index].storeStatus).name}</div> -->
@@ -74,16 +76,14 @@
 <style>
   article {
     position: relative;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 10px;
+    border-radius: 8pt;
+    padding: 16pt;
   }
   article > div {
     background: #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 5px 0;
+    border-radius: 8pt;
+    padding: 16pt;
+    margin: 8pt 0;
     display: flex;
     flex-direction: row;
   }

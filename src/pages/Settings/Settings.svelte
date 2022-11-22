@@ -76,9 +76,11 @@
   Stores.Title.instance.set('Configurções')
 </script>
 
-<Views.Button on:click={newSetting} bottomPadding={$StatusBar.bottomPadding}
-  ><Fa icon={faEdit} /> <span>Nova configuração</span></Views.Button
->
+<div style="padding: 0 16pt;">
+  <Views.Button on:click={newSetting} bottomPadding={$StatusBar.bottomPadding}
+    ><Fa icon={faEdit} /> <span>Nova configuração</span></Views.Button
+  >
+</div>
 <Views.Divider />
 
 <Views.LoadMoreReusableList
@@ -88,7 +90,7 @@
   bind:items
   let:index
 >
-  <article>
+  <article class="shadow">
     <Views.FloatRemove callback={() => onRemoveClick(items[index].id)} />
     <Views.FloatEdit callback={() => editSetting(items[index])} top={45} />
     <h2>{items[index].name}</h2>
@@ -112,14 +114,12 @@
 <style>
   article {
     position: relative;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 10px;
+    border-radius: 8pt;
+    padding: 16pt;
     overflow: hidden;
   }
   article > .value {
-    padding: 10px 0;
+    padding: 16pt 0;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;

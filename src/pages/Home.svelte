@@ -73,18 +73,19 @@
     display: flex;
     flex-wrap: wrap;
   }
-  section > article {
+  
+section > article {
+    box-shadow: 0 4pt 8pt #0000009e;
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 5px;
+    padding: 16pt;
+    border-radius: 4pt;
+    margin: 8pt;
     width: 50%;
     display: flex;
     flex-direction: column;
     flex-basis: 40%;
-    text-shadow: 0.5px 1px #18056b66;
-    box-shadow: 1px 1.5px #00000099;
+    text-shadow: 0.8pt 1pt #18056b66;
+    box-shadow: 0 4pt 8pt #0000009e;
   }
   section > article > .name {
     width: 100%;

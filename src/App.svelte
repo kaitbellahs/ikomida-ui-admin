@@ -254,7 +254,17 @@
     menuHamburgerItems?.forEach(page => Stores.MenuHamburger.instance.addItem(page))
   }
 
-  $: style = `--paddingTop:${styleHeight};--paddingBottom: ${70 + $_StatusBar.bottomPadding}px; overflow: scroll;`
+  $: isPageList = [
+    Routes.apps,
+    Routes.contract,
+    Routes.plans,
+    Routes.resellers,
+    Routes.settings,
+    Routes.terms
+  ].includes(route)
+  $: style = `--padding: ${isPageList ? 0 : 16}pt;--paddingTop:${styleHeight};--paddingBottom: ${
+    70 + $_StatusBar.bottomPadding
+  }px; overflow: scroll;`
 </script>
 
 {#if initialazation}
@@ -330,7 +340,7 @@
 
 <style>
   main {
-    padding: 20px;
+    padding: 16pt;
     padding-top: var(--paddingTop);
     overflow: hidden;
     max-width: 100%;
@@ -356,8 +366,8 @@
     top: 0;
     left: 0;
     right: 0;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 12pt;
+    padding-right: 12pt;
   }
   :global(.grecaptcha-badge) {
     visibility: hidden;

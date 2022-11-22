@@ -94,12 +94,12 @@
 <style>
   article {
     position: relative;
-    border-radius: 4px;
+    border-radius: 4pt;
   }
   article > .apps > div {
     background: #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 10px 0;
+    border-radius: 8pt;
+    padding: 16pt;
+    margin: 16pt 0;
   }
 </style>

@@ -74,9 +74,11 @@
   Stores.Title.instance.set('Configurções')
 </script>
 
-<Views.Button on:click={newTerm} bottomPadding={$StatusBar.bottomPadding}
-  ><Fa icon={faEdit} /> <span>Novo termo</span></Views.Button
->
+<div style="padding: 0 16pt;">
+  <Views.Button on:click={newTerm} bottomPadding={$StatusBar.bottomPadding}
+    ><Fa icon={faEdit} /> <span>Novo termo</span></Views.Button
+  >
+</div>
 <Views.Divider />
 <Views.LoadMoreReusableList
   noItems="Não há termos para exibir!"
@@ -85,7 +87,7 @@
   bind:items
   let:index
 >
-  <article>
+  <article class="shadow">
     <Views.FloatEdit callback={() => editTerm(items[index])} top={45} />
     <h2>{items[index].name}</h2>
     <div>Tipo: {items[index].type.description}</div>
@@ -101,9 +103,7 @@
 <style>
   article {
     position: relative;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 10px;
+    border-radius: 8pt;
+    padding: 16pt;
   }
 </style>

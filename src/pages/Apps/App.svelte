@@ -116,13 +116,13 @@
 <style>
   article {
     position: relative;
-    border-radius: 4px;
+    border-radius: 4pt;
   }
   article > div {
     background: #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 5px 0;
+    border-radius: 8pt;
+    padding: 16pt;
+    margin: 8pt 0;
     display: flex;
     flex-direction: row;
     flex-grow: 0;
@@ -136,6 +136,6 @@
     flex-shrink: 0;
   }
   article > div > b {
-    margin-left: 10px;
+    margin-left: 16pt;
   }
 </style>

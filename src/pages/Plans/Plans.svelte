@@ -7,7 +7,7 @@
   import { StatusBar } from '../../stores/Setup'
   import { onMount } from 'svelte'
   import Fa from 'svelte-fa'
-  import { faEdit } from '@fortawesome/free-solid-svg-icons'
+  import { faEdit, faCopy } from '@fortawesome/free-solid-svg-icons'
 
   let items: Types.Classes.CPlan[]
 
@@ -19,18 +19,12 @@
     Stores.Loading.instance.stop()
   })
 
-  async function newPlan() {
-    Stores.Navigation.instance.goTo(Routes.newPlan, {
-      item: Types.Classes.CPlan.fillWith(null),
-      edit: false
-    })
-  }
-
-  async function editPlan(plan: Types.Classes.CPlan) {
-    Stores.Navigation.instance.goTo(Routes.newPlan, {
-      item: plan,
-      edit: true
-    })
+  async function newPlan(plan?: Types.Classes.CPlan, edit = false) {
+    const options = {
+      item: plan ?? Types.Classes.CPlan.fillWith(null),
+      edit
+    }
+    Stores.Navigation.instance.goTo(Routes.newPlan, options)
   }
 
   async function onActivateClick(id?: string, event?: any) {
@@ -57,8 +51,8 @@
     }
     Stores.Loading.instance.stop()
   }
-  async function openPlan(id?: string, name?: string, price?: number) {
-    const url = `https://${window.host}/plans/${id}/${name}/${price}`
+  async function openPlan(plan: Types.Classes.CPlan) {
+    const url = `https://${window.host}/plans/${plan.id}/${plan.name}/${plan.discountedPrice}/${plan.dueDateAfterXDays}`
     const { value } = await AppLauncher.canOpenUrl({ url })
     await AppLauncher.openUrl({ url })
     if (!value) {
@@ -71,9 +65,11 @@
   Stores.Title.instance.set('Planos')
 </script>
 
-<Views.Button on:click={newPlan} bottomPadding={$StatusBar.bottomPadding}
-  ><Fa icon={faEdit} /> <span>Novo plano</span></Views.Button
->
+<div style="padding: 0 16pt;">
+  <Views.Button on:click={async () => await newPlan} bottomPadding={$StatusBar.bottomPadding}
+    ><Fa icon={faEdit} /> <span>Novo plano</span></Views.Button
+  >
+</div>
 <Views.LoadMoreReusableList
   noItems="Não há planos para exibir!"
   cache={Stores.Cache.Types.PLANS}
@@ -81,8 +77,9 @@
   bind:items
   let:index
 >
-  <article on:click|self={async () => await openPlan(items[index].id, items[index].name, items[index].price)}>
-    <Views.FloatEdit callback={async () => await editPlan(items[index])} />
+  <article class="shadow" on:click|self={async () => await openPlan(items[index])}>
+    <Views.FloatEdit callback={async () => await newPlan(items[index], true)} />
+    <Views.FloatButton icon={faCopy} right={40} callback={async () => await newPlan(items[index])} />
     <h2>{items[index].name}</h2>
     <div>price: {Utils.Strings.currency(items[index].price)}</div>
     <div>Data: {Utils.Strings.dateToDateString(items[index].createdAt)}</div>
@@ -97,9 +94,7 @@
 <style>
   article {
     position: relative;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 10px;
+    border-radius: 8pt;
+    padding: 16pt;
   }
 </style>
