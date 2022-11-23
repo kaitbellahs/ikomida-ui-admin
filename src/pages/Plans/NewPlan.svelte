@@ -119,7 +119,7 @@
     initialValue={item.coupons}
   />
   <Views.CheckBoxList title="Meios de suporte" bind:selected={item.support} options={Types.Types.TSupport.values()} />
-  {#each item?.details ?? [] as detail (detail.key)}
+  {#each item?.details ?? [] as detail}
     <div class="twoCells">
       <Views.TextEdit placeHolder="key" bind:value={detail.key} initialValue={detail.key} />
       <Views.TextEdit placeHolder="value" bind:value={detail.value} initialValue={detail.value ?? undefined} />

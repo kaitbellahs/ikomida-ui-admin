@@ -7,7 +7,7 @@
   import { StatusBar } from '../../stores/Setup'
   import { onMount } from 'svelte'
   import Fa from 'svelte-fa'
-  import { faEdit, faCopy } from '@fortawesome/free-solid-svg-icons'
+  import { faEdit, faCopy, faExternalLink } from '@fortawesome/free-solid-svg-icons'
 
   let items: Types.Classes.CPlan[]
 
@@ -52,7 +52,7 @@
     Stores.Loading.instance.stop()
   }
   async function openPlan(plan: Types.Classes.CPlan) {
-    const url = `https://${window.host}/plans/${plan.id}/${plan.name}/${plan.discountedPrice}/${plan.dueDateAfterXDays}`
+    const url = `https://${window.host}/checkout/${plan.id}/${plan.dueDateAfterXDays}`
     const { value } = await AppLauncher.canOpenUrl({ url })
     await AppLauncher.openUrl({ url })
     if (!value) {
@@ -77,9 +77,10 @@
   bind:items
   let:index
 >
-  <article class="shadow" on:click|self={async () => await openPlan(items[index])}>
+  <article class="shadow">
     <Views.FloatEdit callback={async () => await newPlan(items[index], true)} />
     <Views.FloatButton icon={faCopy} right={40} callback={async () => await newPlan(items[index])} />
+    <Views.FloatButton icon={faExternalLink} right={80} callback={async () => await openPlan(items[index])} />
     <h2>{items[index].name}</h2>
     <div>price: {Utils.Strings.currency(items[index].price)}</div>
     <div>Data: {Utils.Strings.dateToDateString(items[index].createdAt)}</div>
