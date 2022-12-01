@@ -4,7 +4,6 @@
   import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
   import { onMount } from 'svelte'
   import AppStoreStatus from '../../types/AppStoreStatus'
-  import CentredMessage from '@ikomida/shared-frontend/lib/components/CentredMessage.svelte'
 
   let userInfo: Types.Classes.CUser
   let router = Stores.Navigation.instance.router
