@@ -56,6 +56,7 @@
   bind:items
   let:index
 >
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <article class="shadow" on:click={async () => await openApp(items[index].id)}>
     <h2>{items[index].displayName ?? '-'}</h2>
     <div>bundleId: {items[index].bundleId}</div>
@@ -65,7 +66,7 @@
       Plataforma: {items[index].platform ?? '-'}
     </div>
     <div>
-      Ativo: {items[index].active ?? '-'}
+      Ativo: {items[index].active ? ' Sim' : 'Não'}
     </div>
     <div>
       Criação: {Utils.Strings.dateToDateString(items[index].createdAt)}
@@ -76,8 +77,6 @@
 <style>
   article {
     position: relative;
-    border-radius: 8pt;
-    padding: 16pt;
   }
   article > div {
     background: #ccc;

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { status } from '../../network/Apps'
-  import { StatusBar } from '../../stores/Setup'
   import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
   import { onMount } from 'svelte'
   import AppStoreStatus from '../../types/AppStoreStatus'
@@ -10,7 +9,7 @@
   let oldAppStoreStatusSelected: AppStoreStatus
   let appStoreStatusSelected: AppStoreStatus
   let AppStorePublishStatusSelected
-  let item: Types.Classes.CApp = $router.options
+  let item: Types.Classes.CApp = Types.Classes.CApp.fromObject($router.options)
   let userInfo: Types.Classes.CUser
 
   // $: if (item) {
