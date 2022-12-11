@@ -5,6 +5,10 @@
   import Resellers from './pages/Resellers/Resellers.svelte'
   import Contracts from './pages/Contracts/Contracts.svelte'
   import Contract from './pages/Contracts/Contract.svelte'
+  import Product from './pages/Contracts/Products/Product.svelte'
+  import Products from './pages/Contracts/Products/Products.svelte'
+  import NewProduct from './pages/Contracts/Products/NewProduct.svelte'
+  import NewCategory from './pages/Contracts/Products/NewCategory.svelte'
   import NewReseller from './pages/Resellers/NewReseller.svelte'
   import Profile from './pages/Profile.svelte'
   import Result from './pages/Result.svelte'
@@ -279,6 +283,14 @@
       <Resellers />
     {:else if route == Routes.restaurants}
       <Contracts />
+    {:else if route == Routes.products}
+      <Products />
+    {:else if route == Routes.product}
+      <Product />
+    {:else if route == Routes.editProduct}
+      <NewProduct />
+    {:else if route == Routes.editCategory}
+      <NewCategory />
     {:else if route == Routes.newReseller}
       <NewReseller />
     {:else if route == Routes.profile}
