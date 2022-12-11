@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Routes from '../../../stores/Routes'
   import Fa from 'svelte-fa'
   import { faEdit, faQuestion } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../../stores/Setup'
