@@ -71,7 +71,10 @@
     bind:selected={AppStorePublishStatusSelected}
     options={new AppStorePublishStatus().list}
   /> -->
-  <div>bundleId: <b>{item?.bundleId}</b></div>
+  <div>
+    <div>bundleId:</div>
+    <b>{item?.bundleId}</b>
+  </div>
   <div class="cell">
     <div>Situação:</div>
     <div>
@@ -83,32 +86,66 @@
       />
     </div>
   </div>
-  <div>fireBase Id: <b>{item?.fireBaseId ?? '-'}</b></div>
-  <div>iOS Profile Id: <b>{item?.iOSProfileId ?? '-'}</b></div>
-  <div>Versão: <b>{item?.version ?? '-'}</b></div>
-  <div>Versão da loja: <b>{item?.storeVersion ?? '-'}</b></div>
   <div>
-    Plataforma: <b>{item?.platform ?? '-'} </b>
+    <div>fireBase Id:</div>
+    <b>{item?.fireBaseId ?? '-'}</b>
   </div>
   <div>
-    Situação do Build da loja: <b
-      >{item.storeBuildStatus ? AppStorePublishStatus.valueOf(item.storeBuildStatus)?.name : '-'}
-    </b>
+    <div>iOS Profile Id:</div>
+    <b>{item?.iOSProfileId ?? '-'}</b>
   </div>
   <div>
-    Evidencias: <b>{item?.storeEvidences ?? '-'} </b>
+    <div>Versão:</div>
+    <Views.TextEdit
+      placeHolder="Versão"
+      type={Types.TTextEdit.GENERIC}
+      bind:value={item.version}
+      initialValue={item.version}
+    />
   </div>
   <div>
-    Nota: <b>{item?.storeNote ?? '-'} </b>
+    <Views.TextEdit
+      placeHolder="Versão da loja"
+      type={Types.TTextEdit.GENERIC}
+      bind:value={item.storeVersion}
+      initialValue={item.storeVersion}
+    />
   </div>
   <div>
-    Situação da publicação: <b>{item?.storePublishStatus ?? '-'} </b>
+    <div>Plataforma:</div>
+    <b>{item?.platform ?? '-'} </b>
   </div>
   <div>
-    Ativo: <b>{item?.active ?? '-'} </b>
+    <div>Situação do Build da loja:</div>
+    <b>{item.storeBuildStatus ? AppStorePublishStatus.valueOf(item.storeBuildStatus)?.name : '-'} </b>
   </div>
   <div>
-    Criação: <b>{Utils.Strings.dateToDateString(item.createdAt)} </b>
+    <div>Evidencias:</div>
+    <b>{item?.storeEvidences ?? '-'} </b>
+  </div>
+  <div>
+    <Views.TextEdit
+      placeHolder="Nota"
+      type={Types.TTextEdit.TEXT}
+      bind:value={item.storeNote}
+      initialValue={item.storeNote}
+    />
+  </div>
+  <div>
+    <Views.Selector
+      marginTop={0}
+      name="Situação da publicação"
+      bind:selected={item.storePublishStatus}
+      options={AppStoreStatus.values()}
+    />
+  </div>
+  <div>
+    <div>Ativo:</div>
+    <b>{item.active ? ' Sim' : 'Não'}</b>
+  </div>
+  <div>
+    <div>Criação:</div>
+    <b>{Utils.Strings.dateToDateString(item.createdAt)} </b>
   </div>
 </article>
 
@@ -118,7 +155,7 @@
     border-radius: 4pt;
   }
   article > div {
-    background: #ccc;
+    background: rgb(255, 255, 255);
     border-radius: 8pt;
     padding: 16pt;
     margin: 8pt 0;
@@ -129,12 +166,7 @@
     overflow: hidden;
     align-items: center;
   }
-  article > div > * {
-    flex: 1 50%;
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-  article > div > b {
+  article > div > *:not(:first-child) {
     margin-left: 16pt;
   }
 </style>

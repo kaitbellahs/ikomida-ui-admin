@@ -247,7 +247,7 @@
     }
   ]
 
-  $: styleHeight = `${Number($_StatusBar.height) + 60}px`
+  $: styleHeight = `${Number($_StatusBar.height) + 60}pt`
 
   $: if (menuHamburgerItems) {
     Stores.MenuHamburger.instance.reset()
@@ -264,7 +264,7 @@
   ].includes(route)
   $: style = `--padding: ${isPageList ? 0 : 16}pt;--paddingTop:${styleHeight};--paddingBottom: ${
     70 + $_StatusBar.bottomPadding
-  }px; overflow: scroll;`
+  }pt; overflow: scroll;`
 </script>
 
 {#if initialazation}
@@ -340,7 +340,7 @@
 
 <style>
   main {
-    padding: 16pt;
+    padding: var(--padding);
     padding-top: var(--paddingTop);
     overflow: hidden;
     max-width: 100%;
@@ -348,6 +348,8 @@
     display: flex;
     flex-direction: column;
     padding-bottom: var(--paddingBottom);
+    height: 100vh;
+    overflow: scroll;
   }
   :global(*, *:before, *:after) {
     margin: 0;

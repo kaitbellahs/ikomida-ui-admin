@@ -17,5 +17,9 @@ export default {
   profile: Symbol('/profile'),
   forgotPassword: Symbol('/forgotPassword'),
   tac: Symbol('/tac'),
+  products: Symbol('/products'),
+  product: Symbol('/product'),
+  editProduct: Symbol('/editProduct'),
+  editCategory: Symbol('/editCategory'),
   app: Symbol('/app')
 }

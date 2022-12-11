@@ -1,20 +1,20 @@
 <script lang="ts">
   import { associate, unAssociate } from '../../network/Contracts'
-  import { StatusBar } from '../../stores/Setup'
   import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
   import { onMount } from 'svelte'
-  import AppStoreStatus from '../../types/AppStoreStatus'
+  import Routes from '../../stores/Routes'
+
+  const router = Stores.Navigation.instance.router
 
   let userInfo: Types.Classes.CUser
-  let router = Stores.Navigation.instance.router
 
-  $: item = $router.options as Types.Classes.CContract
+  $: contract = Types.Classes.CContract.fromObject($router.options) as Types.Classes.CContract
 
   const associateToMe = async (id?: string, appId?: string) => {
     Stores.Loading.instance.start()
     const response = await associate(id, appId)
     if (response?.success) {
-      item.apps = item?.apps?.map(app => {
+      contract.apps = contract?.apps?.map(app => {
         if (app?.id === appId) {
           app.managedBy = Types.Classes.CUser.fromObject(response.data)
         }
@@ -30,7 +30,7 @@
     Stores.Loading.instance.start()
     const response = await unAssociate(id, appId)
     if (response?.success) {
-      item.apps = item?.apps?.map(app => {
+      contract.apps = contract?.apps?.map(app => {
         if (app?.id === appId) {
           app.managedBy = Types.Classes.CUser.fromObject(response.data)
         }
@@ -42,26 +42,39 @@
     Stores.Loading.instance.stop()
   }
 
+  const manageProducts = async (contract?: Types.Classes.CContract) => {
+    Stores.Loading.instance.start()
+    if (contract) {
+      Stores.Navigation.instance.goTo(Routes.products, contract)
+    } else {
+      Stores.MessageAlert.instance.show('Aconteceu um erro inesperado!')
+    }
+    Stores.Loading.instance.stop()
+  }
+
   onMount(async () => {
     userInfo = await Utils.Jws.extractToken((await Stores.Auth.Auth.instance.data()) ?? '')
     Stores.Loading.instance.stop()
   })
-  $: Stores.Title.instance.set(item?.contractName ?? 'Contrato')
+  $: Stores.Title.instance.set(contract?.contractName ?? 'Contrato')
 </script>
 
 <article>
-  <h2>{item?.contractName ?? '-'}</h2>
-  <div>ikomidaID: {item.ikomidaID}</div>
-  <div>Plano: {item?.plan?.name}</div>
-  <div>Plano: {item?.plan?.price} / mes</div>
-  <div>Situação: {item?.status}</div>
-  <div>CNPJ: {item?.contractIdentity}</div>
-  <div>email: {item?.email}</div>
-  <div>Nome do responsável: {item?.name} {item?.lastName}</div>
-  <div>Telefone: +{item?.areaCode} {item?.phone}</div>
+  <h2>{contract?.contractName ?? '-'}</h2>
+  <div>ikomidaID: {contract.ikomidaID}</div>
+  <div>Plano: {contract?.plan?.name}</div>
+  <div>Plano: {contract?.plan?.price} / mes</div>
+  <div>Situação: {contract?.status}</div>
+  <div>CNPJ: {contract?.contractIdentity}</div>
+  <div>email: {contract?.email}</div>
+  <div>Nome do responsável: {contract?.name} {contract?.lastName}</div>
+  <div>Telefone: +{contract?.areaCode} {contract?.phone}</div>
+  <Views.Button sizeMultiplier={0.9} on:click={async () => await manageProducts(contract)}
+    >Gerenciar produtos</Views.Button
+  >
   <div class="apps">
-    {#if item.apps}
-      {#each item.apps as app}
+    {#if contract.apps}
+      {#each contract.apps as app}
         <div>
           <div>
             Plataforma: {app.platform ?? '-'}
@@ -70,15 +83,15 @@
             Responsável: {app.managedBy?.name ?? 'não associado'}
           </div>
           {#if !app.managedBy?.id}
-            <Views.Button sizeMultiplier={0.8} on:click={async () => await associateToMe(item.id, app.id)}
+            <Views.Button sizeMultiplier={0.8} on:click={async () => await associateToMe(contract.id, app.id)}
               >Associar comigo</Views.Button
             >
           {:else if app?.managedBy?.id === userInfo?.id}
-            <Views.Button sizeMultiplier={0.8} on:click={async () => await unAssociateWithMe(item.id, app.id)}
+            <Views.Button sizeMultiplier={0.8} on:click={async () => await unAssociateWithMe(contract.id, app.id)}
               >Desassociar comigo</Views.Button
             >
           {/if}
-          <div>Situação: {app.storeStatus ? AppStoreStatus.valueOf(app.storeStatus)?.name : '-'}</div>
+          <div>Situação: {app.storeStatus?.name ?? '-'}</div>
         </div>
       {/each}
     {:else}
@@ -86,7 +99,7 @@
     {/if}
   </div>
   <div>
-    Inscrição: {Utils.Strings.dateToDateString(item.createdAt)}
+    Inscrição: {Utils.Strings.dateToDateString(contract.createdAt)}
   </div>
 </article>
 

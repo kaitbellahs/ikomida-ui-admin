@@ -1,32 +1,29 @@
 import { Types } from '@ikomida/shared-frontend'
 export default class AppStoreStatus extends Types.Types.TBaseType {
-  public name: string
-  public description: string
-
   constructor(type: string) {
     super(type)
     switch (type) {
-      case AppStoreStatus.PENDING:
+      case 'PENDING':
         this.name = 'esperando'
         this.description = 'esperando atuação'
         break
-      case AppStoreStatus.DOING:
+      case 'DOING':
         this.name = 'em andamento'
         this.description = 'em andamento'
         break
-      case AppStoreStatus.ATTENTION:
+      case 'ATTENTION':
         this.name = 'precisando de atenção'
         this.description = 'precisando de atenção'
         break
-      case AppStoreStatus.REJECTED:
+      case 'REJECTED':
         this.name = 'rejeitado'
         this.description = 'rejeitado'
         break
-      case AppStoreStatus.CANCELED:
+      case 'CANCELED':
         this.name = 'cancelado'
         this.description = 'cancelado'
         break
-      case AppStoreStatus.DONE:
+      case 'DONE':
         this.name = 'feito'
         this.description = 'feito'
         break
@@ -37,10 +34,11 @@ export default class AppStoreStatus extends Types.Types.TBaseType {
     }
   }
 
-  static PENDING = 'PENDING'
-  static DOING = 'DOING'
-  static ATTENTION = 'ATTENTION'
-  static REJECTED = 'REJECTED'
-  static CANCELED = 'CANCELED'
-  static DONE = 'DONE'
+  static PENDING = new AppStoreStatus('PENDING')
+  static DOING = new AppStoreStatus('DOING')
+  static IN_REVIEW = new AppStoreStatus('IN_REVIEW')
+  static ATTENTION = new AppStoreStatus('ATTENTION')
+  static REJECTED = new AppStoreStatus('REJECTED')
+  static CANCELED = new AppStoreStatus('CANCELED')
+  static DONE = new AppStoreStatus('DONE')
 }

@@ -46,7 +46,7 @@
 
 <div style="padding: 0 16pt;">
   <Views.Button on:click={newApp} bottomPadding={$StatusBar.bottomPadding}
-    ><Fa icon={faEdit} /> <span>Cadastrar novo Appe</span></Views.Button
+    ><Fa icon={faEdit} /> <span>Cadastrar novo App</span></Views.Button
   >
 </div>
 <Views.LoadMoreReusableList
@@ -57,18 +57,18 @@
   let:index
 >
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <article class="shadow" on:click={async () => await openApp(items[index].id)}>
+  <article on:click={async () => await openApp(items[index].id)}>
     <h2>{items[index].displayName ?? '-'}</h2>
-    <div>bundleId: {items[index].bundleId}</div>
+    <div class="shadow">bundleId: {items[index].bundleId}</div>
     <!-- <div>Situação: {new AppStoreStatus(items[index].storeStatus).name}</div> -->
-    <div>Versão: {items[index].version ?? '-'}</div>
-    <div>
+    <div class="shadow">Versão: {items[index].version ?? '-'}</div>
+    <div class="shadow">
       Plataforma: {items[index].platform ?? '-'}
     </div>
-    <div>
+    <div class="shadow">
       Ativo: {items[index].active ? ' Sim' : 'Não'}
     </div>
-    <div>
+    <div class="shadow">
       Criação: {Utils.Strings.dateToDateString(items[index].createdAt)}
     </div>
   </article>
@@ -77,6 +77,8 @@
 <style>
   article {
     position: relative;
+    border-radius: 8pt;
+    padding: 16pt;
   }
   article > div {
     background: #ccc;
