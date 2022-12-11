@@ -1,14 +1,6 @@
 <script lang="ts">
   import Routes from '../../../stores/Routes'
-  import {
-    resetTimeout,
-    search,
-    all,
-    deleteProduct,
-    deleteCategory,
-    updateProduct,
-    updateCategory
-  } from '../../../network/Products'
+  import { search, all, deleteProduct, deleteCategory, updateProduct, updateCategory } from '../../../network/Products'
   import { Views, Stores, Types } from '@ikomida/shared-frontend'
   import { faSearch, faEdit } from '@fortawesome/free-solid-svg-icons'
   import { onMount } from 'svelte'
@@ -41,7 +33,7 @@
     }
   }
 
-  $: Stores.Title.instance.set(`Produtos - ${contract.contractName}`)
+  $: Stores.Title.instance.set(`Produtos - ${contract?.contractName}`)
 
   onMount(async () => {
     if (!contract?.id) {
@@ -81,7 +73,6 @@
     }
     const response = await deleteProduct(contract.id, product.id)
     if (!response?.success) {
-      resetTimeout()
       Stores.MessageAlert.instance.show(response?.data)
     } else {
       categoriesAndProducts = await all(contract.id)
@@ -98,7 +89,6 @@
     }
     const response = await deleteCategory(contract.id, id)
     if (!response?.success) {
-      resetTimeout()
       Stores.MessageAlert.instance.show(response?.data)
       return
     }
@@ -282,6 +272,7 @@
 <Views.Divider />
 {#if (listableCategoryProducts.length > 0 || searchTerm) && !error}
   <Views.ItemsList
+    {contract}
     {removeCategory}
     {editCategory}
     bind:categoriesAndProducts={listableCategoryProducts}
@@ -293,6 +284,7 @@
   <h3>Tente usar outro termo para pequisar</h3>
 {:else if categoriesAndProducts.length > 0}
   <Views.ItemsList
+    {contract}
     itemUp={productUp}
     itemDown={productDown}
     {categoryUp}

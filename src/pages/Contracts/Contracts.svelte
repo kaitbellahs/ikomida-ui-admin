@@ -73,7 +73,7 @@
             <div>
               Responsável: {app?.managedBy?.name ?? 'não associado'}
             </div>
-            <div>Situação: {app.storeStatus ? AppStoreStatus.valueOf(app.storeStatus)?.name : '-'}</div>
+            <div>Situação: {app.storeStatus?.name ?? '-'}</div>
           </div>
         {/each}
       {:else}

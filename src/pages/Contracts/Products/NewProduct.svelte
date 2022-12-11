@@ -1,17 +1,16 @@
 <script lang="ts">
-  import Routes from '../../stores/Routes'
+  import Routes from '../../../stores/Routes'
   import Fa from 'svelte-fa'
   import { faEdit, faQuestion } from '@fortawesome/free-solid-svg-icons'
-  import { StatusBar } from '../../stores/Setup'
+  import { StatusBar } from '../../../stores/Setup'
   import { Views, Types, Stores, Utils } from '@ikomida/shared-frontend'
   import {
-    resetTimeout,
     newProduct,
     updateProduct,
     getCategories,
     deleteProductOptionsCategory,
     deleteProductOption
-  } from '../../network/Products'
+  } from '../../../network/Products'
   import { onMount } from 'svelte'
 
   const router = Stores.Navigation.instance.router
@@ -25,6 +24,8 @@
 
   let categoriesOptions: Types.Classes.CProductCategory[] = []
   let productsValidation = product.toValidation()
+
+  $: contract = $router.options?.contract as Types.Classes.CContract
   $: if (productsValidation) {
     for (const optionsCategoryValidation of productsValidation.optionsCategories ?? []) {
       delete optionsCategoryValidation.highlighted
@@ -62,6 +63,11 @@
   }
 
   async function submit() {
+    if (!contract?.id) {
+      Stores.MessageAlert.instance.show('O Id do contrato nao foi localizado')
+      Stores.Loading.instance.stop()
+      return
+    }
     if (!canContinue || !validateOptionsCategory(undefined, true)) {
       return
     }
@@ -80,13 +86,12 @@
     Stores.Loading.instance.start()
     let response
     if (edit) {
-      response = await updateProduct(product)
+      response = await updateProduct(contract.id, product)
     } else {
-      response = await newProduct(product)
+      response = await newProduct(contract.id, product)
     }
     if (response?.success) {
-      resetTimeout()
-      Stores.Navigation.instance.reset(Routes.products)
+      Stores.Navigation.instance.pop(edit ? 2 : 1)
     } else {
       Stores.MessageAlert.instance.show(response?.data)
     }
@@ -183,7 +188,6 @@
     if (optionsCategory?.id) {
       const response = await deleteProductOptionsCategory(optionsCategory.id)
       if (!response.success) {
-        resetTimeout()
         remove = false
         Stores.MessageAlert.instance.show('Não foi possível remover esta categoria de opções.')
       }
@@ -202,7 +206,6 @@
     if (option?.id) {
       const response = await deleteProductOption(option.id)
       if (!response.success) {
-        resetTimeout()
         remove = false
         Stores.MessageAlert.instance.show('Não foi possível remover esta opção.')
       }
@@ -240,7 +243,12 @@
   }
 
   onMount(async () => {
-    const response = await getCategories()
+    if (!contract?.id) {
+      Stores.MessageAlert.instance.show('O Id do contrato nao foi localizado')
+      Stores.Loading.instance.stop()
+      return
+    }
+    const response = await getCategories(contract.id)
     if (response.success) {
       categoriesOptions = Types.Classes.CProductCategory.fromObject(response.data)
       if (categoriesOptions.length <= 0) {
@@ -254,7 +262,7 @@
     Stores.Loading.instance.stop()
   })
 
-  $: Stores.Title.instance.set(edit ? 'Editar produto' : 'Novo produto')
+  $: Stores.Title.instance.set(`${edit ? 'Editar produto' : 'Novo produto'} - ${contract.contractName}`)
 </script>
 
 {#if product}

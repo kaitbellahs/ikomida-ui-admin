@@ -4,7 +4,7 @@
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../../stores/Setup'
   import { Views, Stores, Types, Logics } from '@ikomida/shared-frontend'
-  import { resetTimeout, newCategory, updateCategory } from '../../../network/Products'
+  import { newCategory, updateCategory } from '../../../network/Products'
   import { onMount } from 'svelte'
 
   const router = Stores.Navigation.instance.router
@@ -16,7 +16,7 @@
   }
   let alwaysShowCategory = true
 
-  $: contract = $router.options as Types.Classes.CContract
+  $: contract = $router.options?.contract as Types.Classes.CContract
   $: canContinue = itemValidation?.title
 
   function validateDatePeriods() {
@@ -77,8 +77,7 @@
       response = await newCategory(contract.id, category)
     }
     if (response?.success) {
-      resetTimeout()
-      Stores.Navigation.instance.reset(Routes.products)
+      Stores.Navigation.instance.pop(1)
     } else {
       Stores.MessageAlert.instance.show(response?.data)
     }
@@ -99,7 +98,7 @@
     Stores.Loading.instance.stop()
   })
 
-  Stores.Title.instance.set(edit ? 'Editar categoria' : 'Novo categoria')
+  Stores.Title.instance.set(`${edit ? 'Editar categoria' : 'Novo categoria'} - ${contract?.contractName}`)
 </script>
 
 <div class="category">

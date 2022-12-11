@@ -12,7 +12,7 @@
   let initalProduct: Types.Classes.CProduct = $router.options.product
   let working = false
 
-  $: contract = $router.options as Types.Classes.CContract
+  $: contract = $router.options?.contract as Types.Classes.CContract
 
   const edit = async () => {
     Stores.Navigation.instance.goTo(Routes.editProduct, {
@@ -180,10 +180,8 @@
     {/if}
     <Views.Divider />
     <Views.Switch bind:name={productStatus} bind:checked={product.active} on:check={enableProduct} />
-    {#if userInfo?.role === Types.Types.TRoles.VENDOR}
-      <Views.Button on:click={removeProduct}><Fa icon={faTrashAlt} /> <span>Remover este produto</span></Views.Button>
-      <Views.Button on:click={edit}><Fa icon={faEdit} /> <span>Editar</span></Views.Button>
-    {/if}
+    <Views.Button on:click={removeProduct}><Fa icon={faTrashAlt} /> <span>Remover este produto</span></Views.Button>
+    <Views.Button on:click={edit}><Fa icon={faEdit} /> <span>Editar</span></Views.Button>
     <Views.Button on:click={newProduct}><Fa icon={faEdit} /> <span>Novo produto Similar</span></Views.Button>
   </product>
 {/if}
