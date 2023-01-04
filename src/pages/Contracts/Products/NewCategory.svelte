@@ -2,7 +2,7 @@
   import Fa from 'svelte-fa'
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
   import { StatusBar } from '../../../stores/Setup'
-  import { Views, Stores, Types, Logics } from '@ikomida/shared-frontend'
+  import { Views, Stores, Types, Logics, Utils } from '@ikomida/shared-frontend'
   import { newCategory, updateCategory } from '../../../network/Products'
   import { onMount } from 'svelte'
 
@@ -18,43 +18,6 @@
   $: contract = $router.options?.contract as Types.Classes.CContract
   $: canContinue = itemValidation?.title
 
-  function validateDatePeriods() {
-    if (
-      !alwaysShowCategory &&
-      ((category.business?.hours?.length ?? 0) === 0 || (category.business?.days?.length ?? 0) === 0)
-    ) {
-      Stores.MessageAlert.instance.show('Precisa escolher dias e horários de ativação da categoria!')
-      return false
-    }
-    for (const businessHour of category.business?.hours ?? []) {
-      if (!Logics.DateTime.validateTime(businessHour?.start)) {
-        Stores.MessageAlert.instance.show(
-          'O horário do início é inválido, o formato deve ser HH:mm e entre 00:00 e 23:59!'
-        )
-        Stores.Loading.instance.stop()
-        return false
-      } else if (!Logics.DateTime.validateTime(businessHour?.end)) {
-        Stores.MessageAlert.instance.show(
-          'O horário do fim é inválido, o formato deve ser HH:mm e entre 00:00 e 23:59!'
-        )
-        Stores.Loading.instance.stop()
-        return false
-      } else if (Number(businessHour.start) > Number(businessHour.end)) {
-        Stores.MessageAlert.instance.show(
-          'O horário do início deve ser menor que o horário do fim, exemplo do início: 09:00 e fim: 18:00!'
-        )
-        Stores.Loading.instance.stop()
-        return false
-      }
-    }
-    if (category.business?.hours && (!category.business.days || category.business.days.length < 1)) {
-      Stores.MessageAlert.instance.show('Precisa escolher pelo menos um dia de funcionamento!')
-      Stores.Loading.instance.stop()
-      return false
-    }
-    return true
-  }
-
   const submit = async () => {
     Stores.Loading.instance.start()
     if (!contract?.id) {
@@ -63,9 +26,9 @@
       return
     }
     if (alwaysShowCategory) {
-      category.business = undefined
+      category.business = []
     }
-    if (!validateDatePeriods()) {
+    if (category.business && category.business.length > 0 && !Utils.Objects.validateBusinessTime(category.business)) {
       Stores.Loading.instance.stop()
       return
     }
@@ -83,8 +46,12 @@
     Stores.Loading.instance.stop()
   }
 
-  function isBusinessTime(business?: Types.Classes.CBusinessTime) {
-    return !business || (!business.days && !business.hours)
+  function isBusinessTime(business?: Types.Classes.CBusinessTime[]) {
+    return (
+      !business ||
+      (Array.isArray(business) ? business : [business]).filter(businessDay => (businessDay.hours?.length ?? 0) > 0)
+        .length === 0
+    )
   }
 
   onMount(() => {
@@ -120,7 +87,12 @@
   <Views.Divider />
   <Views.Switch name="Aparecer sempre" bind:checked={alwaysShowCategory} />
   {#if !alwaysShowCategory}
-    <Views.DatePeriods title="Horário de ativação da categoria" mandatory={true} bind:business={category.business} />
+    <Views.DatePeriods
+      refresh={!alwaysShowCategory}
+      title="Horário de ativação da categoria"
+      mandatory={true}
+      bind:value={category.business}
+    />
   {/if}
   <Views.Divider />
   <Views.Button disabled={!canContinue} on:click={submit} bottomPadding={$StatusBar.bottomPadding}

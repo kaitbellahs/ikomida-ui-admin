@@ -117,7 +117,7 @@
   </div>
   <div>
     <div>Situação do Build da loja:</div>
-    <b>{item.storeBuildStatus ? AppStorePublishStatus.valueOf(item.storeBuildStatus)?.name : '-'} </b>
+    <b>{item.storeBuildStatus?.name ?? '-'} </b>
   </div>
   <div>
     <div>Evidencias:</div>

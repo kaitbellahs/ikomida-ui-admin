@@ -182,10 +182,15 @@
   }
 
   async function removeOptionsCategory(index: number) {
+    if (!contract?.id) {
+      Stores.MessageAlert.instance.show('O Id do contrato nao foi localizado')
+      Stores.Loading.instance.stop()
+      return
+    }
     let remove = true
     const optionsCategory = product.optionsCategories?.[index]
     if (optionsCategory?.id) {
-      const response = await deleteProductOptionsCategory(optionsCategory.id)
+      const response = await deleteProductOptionsCategory(contract.id, optionsCategory.id)
       if (!response.success) {
         remove = false
         Stores.MessageAlert.instance.show('Não foi possível remover esta categoria de opções.')
@@ -200,10 +205,15 @@
   }
 
   async function removeOption(index: number, optionIndex: number) {
+    if (!contract?.id) {
+      Stores.MessageAlert.instance.show('O Id do contrato nao foi localizado')
+      Stores.Loading.instance.stop()
+      return
+    }
     let remove = true
     const option = product.optionsCategories?.[index].options?.[index]
     if (option?.id) {
-      const response = await deleteProductOption(option.id)
+      const response = await deleteProductOption(contract.id, option.id)
       if (!response.success) {
         remove = false
         Stores.MessageAlert.instance.show('Não foi possível remover esta opção.')

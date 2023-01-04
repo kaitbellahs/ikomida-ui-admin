@@ -21,5 +21,10 @@ export default {
   product: Symbol('/product'),
   editProduct: Symbol('/editProduct'),
   editCategory: Symbol('/editCategory'),
+  vendorApps: Symbol('/vendorApps'),
+  vendorLayout: Symbol('/vendorLayout'),
+  vendorLimits: Symbol('/vendorLimits'),
+  vendorSettings: Symbol('/vendorSettings'),
+  vendorSubscription: Symbol('/vendorSubscription'),
   app: Symbol('/app')
 }

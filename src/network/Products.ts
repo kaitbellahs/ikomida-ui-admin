@@ -55,7 +55,10 @@ export async function newCategory(contractId: string, object: Types.Classes.CCat
   return Network.instance?.post(`/category?contractId=${contractId}`, true, object)
 }
 
-export async function updateCategory(contractId: string, object: Types.Classes.CCategoryProducts | Types.Classes.CCategoryProducts[]) {
+export async function updateCategory(
+  contractId: string,
+  object: Types.Classes.CCategoryProducts | Types.Classes.CCategoryProducts[]
+) {
   return Network.instance?.put(`/category?contractId=${contractId}`, true, object)
 }
 

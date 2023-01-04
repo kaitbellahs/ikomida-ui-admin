@@ -3,6 +3,7 @@
   import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
   import { onMount } from 'svelte'
   import Routes from '../../stores/Routes'
+  import ExpandableBox from '@ikomida/shared-frontend/lib/components/ExpandableBox.svelte'
 
   const router = Stores.Navigation.instance.router
 
@@ -42,10 +43,10 @@
     Stores.Loading.instance.stop()
   }
 
-  const manageProducts = async (contract?: Types.Classes.CContract) => {
+  const goTo = async (route: Symbol, contract?: Types.Classes.CContract) => {
     Stores.Loading.instance.start()
     if (contract) {
-      Stores.Navigation.instance.goTo(Routes.products, contract)
+      ;(Stores.Navigation.instance as Stores.Navigation).goTo(route, contract)
     } else {
       Stores.MessageAlert.instance.show('Aconteceu um erro inesperado!')
     }
@@ -69,9 +70,26 @@
   <div>email: {contract?.email}</div>
   <div>Nome do responsável: {contract?.name} {contract?.lastName}</div>
   <div>Telefone: +{contract?.areaCode} {contract?.phone}</div>
-  <Views.Button sizeMultiplier={0.9} on:click={async () => await manageProducts(contract)}
-    >Gerenciar produtos</Views.Button
-  >
+  <Views.ExpandableBox title="Gerenciar contrato">
+    <Views.Button sizeMultiplier={0.9} on:click={async () => await goTo(Routes.products, contract)}
+      >Gerenciar produtos</Views.Button
+    >
+    <Views.Button sizeMultiplier={0.9} on:click={async () => await goTo(Routes.vendorApps, contract)}
+      >Gerenciar apps</Views.Button
+    >
+    <Views.Button sizeMultiplier={0.9} on:click={async () => await goTo(Routes.vendorLayout, contract)}
+      >Layout</Views.Button
+    >
+    <Views.Button sizeMultiplier={0.9} on:click={async () => await goTo(Routes.vendorSettings, contract)}
+      >Configuracoes</Views.Button
+    >
+    <Views.Button sizeMultiplier={0.9} on:click={async () => await goTo(Routes.vendorLimits, contract)}
+      >Limits</Views.Button
+    >
+    <Views.Button sizeMultiplier={0.9} on:click={async () => await goTo(Routes.vendorSubscription, contract)}
+      >Assinatura</Views.Button
+    >
+  </Views.ExpandableBox>
   <div class="apps">
     {#if contract.apps}
       {#each contract.apps as app}

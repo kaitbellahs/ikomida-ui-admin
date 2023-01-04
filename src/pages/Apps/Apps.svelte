@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { getApp } from '../../network/Apps'
+  import { getApp } from '../../network/Apps.js'
   import { Views, Utils, Stores, Types } from '@ikomida/shared-frontend'
-  import { StatusBar } from '../../stores/Setup'
+  import { StatusBar } from '../../stores/Setup.js'
   import { onMount } from 'svelte'
   import Fa from 'svelte-fa'
   import { faEdit } from '@fortawesome/free-solid-svg-icons'
   import { AppLauncher } from '@capacitor/app-launcher'
   import { Clipboard } from '@capacitor/clipboard'
-  import Routes from '../../stores/Routes'
+  import Routes from '../../stores/Routes.js'
 
   let items: Types.Classes.CApp[]
 

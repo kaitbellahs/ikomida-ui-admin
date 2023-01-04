@@ -9,6 +9,11 @@
   import Products from './pages/Contracts/Products/Products.svelte'
   import NewProduct from './pages/Contracts/Products/NewProduct.svelte'
   import NewCategory from './pages/Contracts/Products/NewCategory.svelte'
+  import VendorApps from './pages/Contracts/Control/Apps.svelte'
+  import VendorLayout from './pages/Contracts/Control/Layout.svelte'
+  import VendorLimits from './pages/Contracts/Control/Limits.svelte'
+  import VendorSettings from './pages/Contracts/Control/Settings.svelte'
+  import VendorSubscription from './pages/Contracts/Control/Subscription.svelte'
   import NewReseller from './pages/Resellers/NewReseller.svelte'
   import Profile from './pages/Profile.svelte'
   import Result from './pages/Result.svelte'
@@ -291,6 +296,16 @@
       <NewProduct />
     {:else if route == Routes.editCategory}
       <NewCategory />
+    {:else if route == Routes.vendorApps}
+      <VendorApps />
+    {:else if route == Routes.vendorLayout}
+      <VendorLayout />
+    {:else if route == Routes.vendorLimits}
+      <VendorLimits />
+    {:else if route == Routes.vendorSettings}
+      <VendorSettings />
+    {:else if route == Routes.vendorSubscription}
+      <VendorSubscription />
     {:else if route == Routes.newReseller}
       <NewReseller />
     {:else if route == Routes.profile}
