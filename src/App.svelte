@@ -256,7 +256,7 @@
     }
   ]
 
-  $: styleHeight = `${Number($_StatusBar.height) + 60}pt`
+  $: styleHeight = `${Number($_StatusBar.height) + 60}px`
 
   $: if (menuHamburgerItems) {
     Stores.MenuHamburger.instance.reset()
@@ -271,9 +271,9 @@
     Routes.settings,
     Routes.terms
   ].includes(route)
-  $: style = `--padding: ${isPageList ? 0 : 16}pt;--paddingTop:${styleHeight};--paddingBottom: ${
+  $: style = `--padding: ${isPageList ? 0 : 16}px;--paddingTop:${styleHeight};--paddingBottom: ${
     70 + $_StatusBar.bottomPadding
-  }pt; overflow: scroll;`
+  }px; overflow: scroll;`
 </script>
 
 {#if initialazation}
@@ -395,8 +395,8 @@
     top: 0;
     left: 0;
     right: 0;
-    padding-left: 12pt;
-    padding-right: 12pt;
+    padding-left: 12px;
+    padding-right: 12px;
   }
   :global(.grecaptcha-badge) {
     visibility: hidden;

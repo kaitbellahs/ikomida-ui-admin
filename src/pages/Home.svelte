@@ -73,19 +73,19 @@
     display: flex;
     flex-wrap: wrap;
   }
-  
-section > article {
-    box-shadow: 0 4pt 8pt #0000009e;
+
+  section > article {
+    box-shadow: 0 4px 8px #0000009e;
     flex: 1;
-    padding: 16pt;
-    border-radius: 4pt;
-    margin: 8pt;
+    padding: 16px;
+    border-radius: 4px;
+    margin: 8px;
     width: 50%;
     display: flex;
     flex-direction: column;
     flex-basis: 40%;
-    text-shadow: 0.8pt 1pt #18056b66;
-    box-shadow: 0 4pt 8pt #0000009e;
+    text-shadow: 0.8px 1px #18056b66;
+    box-shadow: 0 4px 8px #0000009e;
   }
   section > article > .name {
     width: 100%;

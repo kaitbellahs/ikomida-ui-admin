@@ -44,7 +44,7 @@
   Stores.Title.instance.set('Lista de apps')
 </script>
 
-<div style="padding: 0 16pt;">
+<div style="padding: 0 16px;">
   <Views.Button on:click={newApp} bottomPadding={$StatusBar.bottomPadding}
     ><Fa icon={faEdit} /> <span>Cadastrar novo App</span></Views.Button
   >
@@ -77,14 +77,14 @@
 <style>
   article {
     position: relative;
-    border-radius: 8pt;
-    padding: 16pt;
+    border-radius: 8px;
+    padding: 16px;
   }
   article > div {
     background: #ccc;
-    border-radius: 8pt;
-    padding: 16pt;
-    margin: 8pt 0;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0;
     display: flex;
     flex-direction: row;
   }

@@ -152,13 +152,13 @@
 <style>
   article {
     position: relative;
-    border-radius: 4pt;
+    border-radius: 4px;
   }
   article > div {
     background: rgb(255, 255, 255);
-    border-radius: 8pt;
-    padding: 16pt;
-    margin: 8pt 0;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0;
     display: flex;
     flex-direction: row;
     flex-grow: 0;
@@ -167,6 +167,6 @@
     align-items: center;
   }
   article > div > *:not(:first-child) {
-    margin-left: 16pt;
+    margin-left: 16px;
   }
 </style>

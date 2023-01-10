@@ -85,7 +85,7 @@
     margin: 0;
   }
   main > div {
-    margin-bottom: 32pt;
+    margin-bottom: 32px;
   }
   .avatar {
     display: flex;
@@ -96,8 +96,8 @@
     font-size: 3em;
     width: 100%;
     max-width: 100%;
-    border-radius: 48pt;
-    line-height: 88pt;
+    border-radius: 48px;
+    line-height: 88px;
     vertical-align: middle;
     display: table-cell;
     overflow: hidden;

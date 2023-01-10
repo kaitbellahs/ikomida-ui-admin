@@ -18,7 +18,7 @@
     if (!value) {
       await Clipboard.write({ string: url })
       Stores.MessageAlert.instance.show(
-        `Se o navegador externo no for aberto automaticamente, por favor o abra e digita esa URL: ${url}, que também foi copiado para sua área de transferência para colar-lo!`
+        `Se o navegador externo no for aberto automaticamente, por favor o abra e digite a URL: ${url}, que também foi copiado para sua área de transferência para colar-lo!`
       )
     }
   }
@@ -130,39 +130,39 @@
   .charge {
     position: relative;
     background: #cccccc22;
-    box-shadow: 0 4pt 8pt #0000009e;
-    padding: 18pt;
-    margin-top: 16pt;
-    border-radius: 8pt;
+    box-shadow: 0 4px 8px #0000009e;
+    padding: 18px;
+    margin-top: 16px;
+    border-radius: 8px;
   }
   .invoice {
     position: absolute;
-    top: -8pt;
-    right: -8pt;
+    top: -8px;
+    right: -8px;
     font-size: 1.6em;
     color: white;
     font-family: RobotoBold;
     background: #1e1c1c;
-    border-radius: 16pt;
-    width: 32pt;
-    height: 32pt;
+    border-radius: 16px;
+    width: 32px;
+    height: 32px;
     vertical-align: middle;
     text-align: center;
-    padding: 4pt;
+    padding: 4px;
   }
   .receipt {
     position: absolute;
-    top: -8pt;
-    right: 32pt;
+    top: -8px;
+    right: 32px;
     font-size: 1.6em;
     color: white;
     font-family: RobotoBold;
     background: #1e1c1c;
-    border-radius: 16pt;
-    width: 32pt;
-    height: 32pt;
+    border-radius: 16px;
+    width: 32px;
+    height: 32px;
     vertical-align: middle;
     text-align: center;
-    padding: 4pt;
+    padding: 4px;
   }
 </style>

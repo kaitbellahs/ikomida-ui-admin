@@ -45,7 +45,7 @@
   Stores.Title.instance.set('Lista de contratos')
 </script>
 
-<div style="padding: 0 16pt;">
+<div style="padding: 0 16px;">
   <Views.Button on:click={newContract} bottomPadding={$StatusBar.bottomPadding}
     ><Fa icon={faEdit} /> <span>Cadastrar novo Contracte</span></Views.Button
   >
@@ -89,13 +89,13 @@
 <style>
   article {
     position: relative;
-    border-radius: 8pt;
-    padding: 16pt;
+    border-radius: 8px;
+    padding: 16px;
   }
   article > .apps > div {
     background: #ccc;
-    border-radius: 8pt;
-    padding: 16pt;
-    margin: 16pt 0;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
   }
 </style>

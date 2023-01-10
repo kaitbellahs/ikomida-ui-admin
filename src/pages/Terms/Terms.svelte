@@ -74,7 +74,7 @@
   Stores.Title.instance.set('Configurções')
 </script>
 
-<div style="padding: 0 16pt;">
+<div style="padding: 0 16px;">
   <Views.Button on:click={newTerm} bottomPadding={$StatusBar.bottomPadding}
     ><Fa icon={faEdit} /> <span>Novo termo</span></Views.Button
   >
@@ -103,7 +103,7 @@
 <style>
   article {
     position: relative;
-    border-radius: 8pt;
-    padding: 16pt;
+    border-radius: 8px;
+    padding: 16px;
   }
 </style>

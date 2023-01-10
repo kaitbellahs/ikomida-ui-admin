@@ -58,14 +58,14 @@
     if (!value) {
       await Clipboard.write({ string: url })
       Stores.MessageAlert.instance.show(
-        `Se o navigador externo nao abriu: abra o e digitar essa URL: ${url}, também foi copiado para sua área de transferência para colar-lo!`
+        `Se o navegador externo não abriu: abra o e digitar essa URL: ${url}, também foi copiado para sua área de transferência para colar-lo!`
       )
     }
   }
   Stores.Title.instance.set('Planos')
 </script>
 
-<div style="padding: 0 16pt;">
+<div style="padding: 0 16px;">
   <Views.Button on:click={async () => await newPlan} bottomPadding={$StatusBar.bottomPadding}
     ><Fa icon={faEdit} /> <span>Novo plano</span></Views.Button
   >
@@ -95,7 +95,7 @@
 <style>
   article {
     position: relative;
-    border-radius: 8pt;
-    padding: 16pt;
+    border-radius: 8px;
+    padding: 16px;
   }
 </style>
